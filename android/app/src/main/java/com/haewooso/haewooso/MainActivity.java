@@ -1,4 +1,4 @@
-package com.haewooso;
+package com.haewooso.haewooso;
 
 import android.os.Build;
 import android.os.Bundle;

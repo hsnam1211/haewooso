@@ -1,4 +1,4 @@
-package com.haewooso;
+package com.haewooso.haewooso;
 
 import android.app.Application;
 import android.content.res.Configuration;
