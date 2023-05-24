@@ -15,6 +15,7 @@ function Tabs() {
     <Tab.Navigator
       screenOptions={{
         tabBarHideOnKeyboard: true,
+        headerShown: false,
         tabBarStyle: {
           // backgroundColor: 'transparent',
           // backgroundColor: BLACK_COLOR,
