@@ -16,7 +16,7 @@ function Main() {
         alignItems: 'center',
       }}
     >
-      <Text style={{ color: '#fff' }}>안녕</Text>
+      <Text style={{ color: '#fff' }}>해우소</Text>
     </View>
   );
 }

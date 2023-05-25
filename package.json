@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@notifee/react-native": "^7.7.1",
     "@react-native-firebase/app": "^17.5.0",
     "@react-native-firebase/messaging": "^17.5.0",
     "@react-navigation/bottom-tabs": "^6.5.7",

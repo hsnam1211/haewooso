@@ -1216,6 +1216,11 @@ PODS:
     - FirebaseCoreExtension (= 10.7.0)
     - React-Core
     - RNFBApp
+  - RNNotifee (7.7.1):
+    - React-Core
+    - RNNotifee/NotifeeCore (= 7.7.1)
+  - RNNotifee/NotifeeCore (7.7.1):
+    - React-Core
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
@@ -1274,6 +1279,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1394,6 +1400,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNNotifee:
+    :path: "../node_modules/@notifee/react-native"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   Yoga:
@@ -1468,6 +1476,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 475a4c447168d0ad4c807e48ef5e0963a0f4eb1b
   RNFBApp: 0d8bf86673bbad0524d1ceac3944d71ccf48a0e4
   RNFBMessaging: 4b8cb1215465bacca36d0fcfc2f51e7e2aa1bc91
+  RNNotifee: 05692d7bb42b6c718a3906aeb8431c48ff2e8097
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   Yoga: 065f0b74dba4832d6e328238de46eb72c5de9556
 

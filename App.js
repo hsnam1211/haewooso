@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Root from './navigation/Root';
 import { PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import notifee from '@notifee/react-native';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -19,13 +20,62 @@ async function requestUserPermission() {
 
 export default function App() {
   useEffect(() => {
-    if (Platform.OS === 'ios') {
-      requestUserPermission();
-    } else {
-      PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-      );
-    }
+    const requestPermission = async () => {
+      if (Platform.OS === 'ios') {
+        await requestUserPermission();
+      } else {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+      }
+    };
+
+    const onDisplayNotification = async ({ title = '', body = '' }) => {
+      const channelId = await notifee.createChannel({
+        id: 'channelId',
+        name: 'channelName',
+      });
+
+      await notifee.displayNotification({
+        title,
+        body,
+        android: {
+          channelId,
+        },
+      });
+    };
+
+    const subscribeToMessages = () => {
+      const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+        console.log('[Remote Message] ', JSON.stringify(remoteMessage));
+      });
+
+      messaging().onMessage(async (remoteMessage) => {
+        const title = remoteMessage?.notification?.title;
+        const body = remoteMessage?.notification?.body;
+        await onDisplayNotification({ title, body });
+      });
+      return unsubscribe;
+    };
+
+    const getFcmToken = async () => {
+      try {
+        await messaging().registerDeviceForRemoteMessages();
+        const fcmToken = await messaging().getToken();
+        console.log('[FCM Token] ', fcmToken);
+      } catch (error) {
+        console.log('Failed to get FCM token:', error);
+      }
+    };
+
+    const initialize = async () => {
+      await requestPermission();
+      getFcmToken();
+    };
+
+    initialize();
+
+    return subscribeToMessages();
   }, []);
 
   return (
