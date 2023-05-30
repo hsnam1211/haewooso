@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Tabs from './Tabs';
 import StackModal from './StackModal';
 import StackCard from './StackCard';
 import { View } from 'react-native';
+import { useRecoilState } from 'recoil';
+import { getMessageState } from '../src/recoil/atoms';
+import { Storage } from '../src/util/storage'
 
 const Nav = createNativeStackNavigator();
 
-const Root = () => (
-  <Nav.Navigator
+const Root = () => {
+
+  return (<Nav.Navigator
     screenOptions={{
       headerShown: false,
     }}
@@ -29,7 +33,7 @@ const Root = () => (
       }}
       component={StackCard}
     />
-  </Nav.Navigator>
-);
+  </Nav.Navigator>)
+};
 
 export default Root;

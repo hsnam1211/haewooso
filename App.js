@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Root from './navigation/Root';
 import { PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
+import { RecoilRoot } from 'recoil';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -19,6 +20,7 @@ async function requestUserPermission() {
 }
 
 export default function App() {
+
   useEffect(() => {
     const requestPermission = async () => {
       if (Platform.OS === 'ios') {
@@ -45,19 +47,22 @@ export default function App() {
       });
     };
 
+    // fcm 수신부
     const subscribeToMessages = () => {
-      const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        console.log('[Remote Message] ', JSON.stringify(remoteMessage));
-      });
+      // const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      //   console.log('[Remote Message] ', JSON.stringify(remoteMessage));
+      //   await Storage.setItem('message', remoteMessage);
+      // });
 
       messaging().onMessage(async (remoteMessage) => {
         const title = remoteMessage?.notification?.title;
         const body = remoteMessage?.notification?.body;
         await onDisplayNotification({ title, body });
       });
-      return unsubscribe;
+      // return unsubscribe;
     };
 
+    // fcm 토큰 받아오는 함수
     const getFcmToken = async () => {
       try {
         await messaging().registerDeviceForRemoteMessages();
@@ -79,9 +84,11 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Root />
-    </NavigationContainer>
+    <RecoilRoot>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </RecoilRoot>
   );
 }
 
