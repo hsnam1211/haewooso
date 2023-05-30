@@ -26,5 +26,7 @@ project.xcworkspace
 # Bundle artifacts
 *.jsbundle
 
+*.p8
+
 # CocoaPods
 /Pods/
