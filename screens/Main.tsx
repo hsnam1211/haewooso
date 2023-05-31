@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 
-import { View, Text } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useQueryClient } from 'react-query';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { View, Text, Pressable } from 'react-native';
 import styled from 'styled-components';
 import { Storage } from '../src/util/storage'
 import { getMessageState } from '../src/recoil/atoms';
 import messaging from '@react-native-firebase/messaging';
+import { width, height } from '../src/util/screenDimensions';
 
 
 function Main() {
@@ -43,8 +41,10 @@ function Main() {
         alignItems: 'center',
       }}
     >
-      <Text style={{ color: '#fff' }}>{message?.title}</Text>
-      <Text style={{ color: '#fff' }}>{message?.body}</Text>
+      {message?.title && <Pressable onPress={() => { setMessage(undefined) }} style={{ borderRadius: 6, padding: 20, width: width - 40, height: 400, backgroundColor: 'gray' }}>
+        <Text style={{ color: '#fff' }}>{message?.title}</Text>
+        <Text style={{ color: '#fff' }}>{message?.body}</Text>
+      </Pressable>}
     </View>
   );
 }

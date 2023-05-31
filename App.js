@@ -7,6 +7,8 @@ import { PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
 import { RecoilRoot } from 'recoil';
+import { v4 as uuidv4 } from "uuid";
+import { Storage } from './src/util/storage';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -19,10 +21,78 @@ async function requestUserPermission() {
   }
 }
 
-export default function App() {
+async function getUUID() {
+  const uuid = await Storage.getItem('uuid');
+  if (!uuid) {
+    await Storage.setItem('uuid', uuidv4());
+  }
+}
 
+async function onDisplayNotification({ title = '', body = '' }) {
+  const channelId = await notifee.createChannel({
+    id: 'channelId',
+    name: 'channelName',
+  });
+
+  await notifee.displayNotification({
+    title,
+    body,
+    android: {
+      channelId,
+    },
+  });
+}
+
+async function getFcmToken() {
+  try {
+    const storedToken = await Storage.getItem('fcmToken');
+    if (!storedToken) {
+      await messaging().registerDeviceForRemoteMessages();
+      const fcmToken = await messaging().getToken();
+      console.log('[FCM Token]', fcmToken);
+      await Storage.setItem('fcmToken', fcmToken);
+
+      const uuid = await Storage.getItem('uuid');
+      await saveUUIDAndTokenToServer(uuid, fcmToken);
+
+    } else {
+      const currentToken = await messaging().getToken();
+      if (currentToken !== storedToken) {
+        await messaging().registerDeviceForRemoteMessages();
+        const newToken = await messaging().getToken();
+        await Storage.setItem('fcmToken', newToken);
+
+        const uuid = await Storage.getItem('uuid');
+        await saveUUIDAndTokenToServer(uuid, newToken);
+      }
+    }
+  } catch (error) {
+    console.log('Failed to get FCM token:', error);
+  }
+}
+
+
+async function saveUUIDAndTokenToServer(uuid, fcmToken) {
+  // 서버에 UUID와 FCM 토큰을 저장하는 API 호출
+  console.log('Saving UUID and FCM Token to server:', uuid, fcmToken);
+  // 실패 시 
+  // await Storage.setItem('fcmToken', undefined);
+  // await Storage.setItem('uuid', undefined);
+  // await getFcmToken()
+}
+
+async function scheduleFCMTokenRefresh() {
+  try {
+    const refreshInterval = 24 * 60 * 60 * 1000; // 24 hours
+    setInterval(getFcmToken, refreshInterval);
+  } catch (error) {
+    console.log('Failed to schedule FCM token refresh:', error);
+  }
+}
+
+export default function App() {
   useEffect(() => {
-    const requestPermission = async () => {
+    const initialize = async () => {
       if (Platform.OS === 'ios') {
         await requestUserPermission();
       } else {
@@ -30,57 +100,22 @@ export default function App() {
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
         );
       }
-    };
-
-    const onDisplayNotification = async ({ title = '', body = '' }) => {
-      const channelId = await notifee.createChannel({
-        id: 'channelId',
-        name: 'channelName',
-      });
-
-      await notifee.displayNotification({
-        title,
-        body,
-        android: {
-          channelId,
-        },
-      });
-    };
-
-    // fcm 수신부
-    const subscribeToMessages = () => {
-      // const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      //   console.log('[Remote Message] ', JSON.stringify(remoteMessage));
-      //   await Storage.setItem('message', remoteMessage);
-      // });
-
-      messaging().onMessage(async (remoteMessage) => {
-        const title = remoteMessage?.notification?.title;
-        const body = remoteMessage?.notification?.body;
-        await onDisplayNotification({ title, body });
-      });
-      // return unsubscribe;
-    };
-
-    // fcm 토큰 받아오는 함수
-    const getFcmToken = async () => {
-      try {
-        await messaging().registerDeviceForRemoteMessages();
-        const fcmToken = await messaging().getToken();
-        console.log('[FCM Token] ', fcmToken);
-      } catch (error) {
-        console.log('Failed to get FCM token:', error);
-      }
-    };
-
-    const initialize = async () => {
-      await requestPermission();
-      getFcmToken();
+      await getUUID();
+      await getFcmToken();
+      scheduleFCMTokenRefresh();
     };
 
     initialize();
 
-    return subscribeToMessages();
+    const subscribeToMessages = messaging().onMessage(
+      async (remoteMessage) => {
+        const { title, body } = remoteMessage?.notification || {};
+        // 포그라운드 메시지
+        await onDisplayNotification({ title, body });
+      }
+    );
+
+    return () => subscribeToMessages();
   }, []);
 
   return (
@@ -91,12 +126,3 @@ export default function App() {
     </RecoilRoot>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
