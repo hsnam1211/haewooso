@@ -9,7 +9,7 @@ import { width, height } from '../src/util/screenDimensions';
 
 
 function Main() {
-  const [message, setMessage] = useState()
+  const [message, setMessage] = useState(undefined)
   // const [msgData, setMsgData] = useRecoilState(getMessageState)
   messaging().onMessage(async (remoteMessage) => {
     setMessage({
