@@ -5,9 +5,9 @@ import messaging from '@react-native-firebase/messaging';
 import { Storage } from './src/util/storage'
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  // console.log('Message handled in the background!', remoteMessage);
-  // console.log('Message handled in the background!', remoteMessage?.notification?.title);
-  // console.log('Message handled in the background!', remoteMessage?.notification?.body);
+  console.log('Message background!', remoteMessage);
+  console.log('Message background!', remoteMessage?.notification?.title);
+  console.log('Message background!', remoteMessage?.notification?.body);
 
   // const notificationString = JSON.stringify(remoteMessage);
 

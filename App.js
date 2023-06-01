@@ -107,15 +107,17 @@ export default function App() {
 
     initialize();
 
-    const subscribeToMessages = messaging().onMessage(
-      async (remoteMessage) => {
-        const { title, body } = remoteMessage?.notification || {};
-        // 포그라운드 메시지
-        await onDisplayNotification({ title, body });
-      }
-    );
+    // const subscribeToMessages = messaging().onMessage(
+    //   async (remoteMessage) => {
+    //     // alert('?')
+    //     console.log('App.js: ', remoteMessage)
+    //     const { title, body } = remoteMessage?.notification || {};
+    //     // 포그라운드 메시지
+    //     // await onDisplayNotification({ title, body });
+    //   }
+    // );
 
-    return () => subscribeToMessages();
+    // return () => subscribeToMessages();
   }, []);
 
   return (

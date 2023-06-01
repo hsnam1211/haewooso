@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, AppState, AppStateStatus } from 'react-native';
 import styled from 'styled-components';
 import { Storage } from '../src/util/storage'
 import { getMessageState } from '../src/recoil/atoms';
@@ -11,14 +11,27 @@ import { width, height } from '../src/util/screenDimensions';
 function Main() {
   const [message, setMessage] = useState(undefined)
   // const [msgData, setMsgData] = useRecoilState(getMessageState)
-  messaging().onMessage(async (remoteMessage) => {
-    setMessage({
-      body: remoteMessage?.notification?.body,
-      title: remoteMessage?.notification?.title
-    })
-  });
+
+  const appState = useRef(AppState.currentState);
+
+  // const [backgroundTime, setBackgroundTime] = useState<number>(0);
+  // const [foregroundTime, setForegroundTime] = useState<number>(0);
+
+  // const handleAppStateChange = (nextAppState: AppStateStatus) => {
+  //   if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+  //     console.log('foreground 전환');
+  //     setForegroundTime(Date.now());
+  //   } else {
+  //     console.log('background 전환');
+  //     setBackgroundTime(Date.now());
+  //   }
+
+  //   appState.current = nextAppState;
+  // };
+
   const getMessageHandle = async () => {
     await Storage.getItem('message').then((msg) => {
+      console.log('background에서 가져온 Message : ', msg)
       if (msg) {
         setMessage({
           body: msg?.notification?.body,
@@ -28,10 +41,48 @@ function Main() {
       Storage.setItem('message', null);
     })
   }
-  useEffect(() => {
-    getMessageHandle()
-  }, [])
 
+  const handleAppStateChange = nextAppState => {
+    console.log('⚽️appState nextAppState', appState.current, nextAppState);
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      console.log('⚽️⚽️App has come to the foreground!');
+      getMessageHandle()
+    }
+    if (
+      appState.current.match(/inactive|active/) &&
+      nextAppState === 'background'
+    ) {
+      console.log('⚽️⚽️App has come to the background!');
+    }
+    appState.current = nextAppState;
+  };
+
+  useEffect(() => {
+    const appStateListener = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      appStateListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscribeToMessages = messaging().onMessage(
+      async (remoteMessage) => {
+        alert('?@')
+        console.log('Main subscribeToMessages', remoteMessage)
+        setMessage({
+          body: remoteMessage?.notification?.body,
+          title: remoteMessage?.notification?.title
+        })
+      }
+    );
+
+    return () => subscribeToMessages();
+  }, [])
+  
   return (
     <View
       style={{
