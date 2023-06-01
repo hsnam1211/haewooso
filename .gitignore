@@ -254,6 +254,39 @@ google-services.json
 # Android Profiling
 *.hprof
 
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+.xcode.env.local
+
+# Bundle artifacts
+*.jsbundle
+
+*.p8
+
+# CocoaPods
+/Pods/
+
 
 package-lock.json
 # End of https://www.toptal.com/developers/gitignore/api/reactnative

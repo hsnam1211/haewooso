@@ -45,6 +45,8 @@ async function onDisplayNotification({ title = '', body = '' }) {
 
 async function getFcmToken() {
   try {
+    let platform = Platform.OS
+    console.log({ platform }, await messaging().getToken());
     const storedToken = await Storage.getItem('fcmToken');
     if (!storedToken) {
       await messaging().registerDeviceForRemoteMessages();
@@ -109,7 +111,6 @@ export default function App() {
 
     // const subscribeToMessages = messaging().onMessage(
     //   async (remoteMessage) => {
-    //     // alert('?')
     //     console.log('App.js: ', remoteMessage)
     //     const { title, body } = remoteMessage?.notification || {};
     //     // 포그라운드 메시지

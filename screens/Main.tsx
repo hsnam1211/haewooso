@@ -14,20 +14,21 @@ function Main() {
 
   const appState = useRef(AppState.currentState);
 
-  // const [backgroundTime, setBackgroundTime] = useState<number>(0);
-  // const [foregroundTime, setForegroundTime] = useState<number>(0);
+  const [backgroundTime, setBackgroundTime] = useState<number>(0);
+  const [foregroundTime, setForegroundTime] = useState<number>(0);
 
-  // const handleAppStateChange = (nextAppState: AppStateStatus) => {
-  //   if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-  //     console.log('foreground 전환');
-  //     setForegroundTime(Date.now());
-  //   } else {
-  //     console.log('background 전환');
-  //     setBackgroundTime(Date.now());
-  //   }
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('foreground 전환');
+      setForegroundTime(Date.now());
+      getMessageHandle()
+    } else {
+      console.log('background 전환');
+      setBackgroundTime(Date.now());
+    }
 
-  //   appState.current = nextAppState;
-  // };
+    appState.current = nextAppState;
+  };
 
   const getMessageHandle = async () => {
     await Storage.getItem('message').then((msg) => {
@@ -41,24 +42,6 @@ function Main() {
       Storage.setItem('message', null);
     })
   }
-
-  const handleAppStateChange = nextAppState => {
-    console.log('⚽️appState nextAppState', appState.current, nextAppState);
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      console.log('⚽️⚽️App has come to the foreground!');
-      getMessageHandle()
-    }
-    if (
-      appState.current.match(/inactive|active/) &&
-      nextAppState === 'background'
-    ) {
-      console.log('⚽️⚽️App has come to the background!');
-    }
-    appState.current = nextAppState;
-  };
 
   useEffect(() => {
     const appStateListener = AppState.addEventListener('change', handleAppStateChange);
@@ -82,7 +65,7 @@ function Main() {
 
     return () => subscribeToMessages();
   }, [])
-  
+
   return (
     <View
       style={{
