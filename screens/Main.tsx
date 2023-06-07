@@ -7,6 +7,10 @@ import { getMessageState } from '../src/recoil/atoms';
 import messaging from '@react-native-firebase/messaging';
 import { width, height } from '../src/util/screenDimensions';
 
+const Container = styled(View)`
+  margin-right: 12;
+  margin-left: 12;
+`;
 
 function Main() {
   const [message, setMessage] = useState(undefined)
@@ -75,10 +79,17 @@ function Main() {
         alignItems: 'center',
       }}
     >
+      <Container>
+      <View>
+        <Text style={{color: 'white'}}>
+          남은 답장 횟수 : 0/5
+        </Text>
+      </View>
       {message?.title && <Pressable onPress={() => { setMessage(undefined) }} style={{ borderRadius: 6, padding: 20, width: width - 40, height: 400, backgroundColor: 'gray' }}>
         <Text style={{ color: '#fff' }}>{message?.title}</Text>
         <Text style={{ color: '#fff' }}>{message?.body}</Text>
       </Pressable>}
+      </Container>
     </View>
   );
 }
