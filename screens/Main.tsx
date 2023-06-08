@@ -6,6 +6,7 @@ import { Storage } from '../src/util/storage'
 import { getMessageState } from '../src/recoil/atoms';
 import messaging from '@react-native-firebase/messaging';
 import { width, height } from '../src/util/screenDimensions';
+import * as Animatable from "react-native-animatable";
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -153,7 +154,7 @@ function Main() {
   return (
     <View
       style={{
-        backgroundColor: '#F9F5EB',
+        backgroundColor: '#ffffff',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -161,6 +162,10 @@ function Main() {
     >
       <Container>
         <PushCountComponent />
+        {/* <View >
+          <Animatable.Text animation="fadeInUp" iterationCount={1} duration={2000} direction="alternate">Up and down you go</Animatable.Text>
+          <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ textAlign: 'center' }}>❤️</Animatable.Text>
+        </View> */}
         <MainFlatList />
         {message?.title && <Pressable onPress={() => { setMessage(undefined) }} style={{ borderRadius: 6, padding: 20, width: width - 40, height: 400, backgroundColor: 'gray' }}>
           <Text style={{ color: '#fff' }}>{message?.title}</Text>

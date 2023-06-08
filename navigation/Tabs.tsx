@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import DeviceInfo from 'react-native-device-info';
 import Main from '../screens/Main';
 import Sample from '../screens/Sample';
+import SvgIcon from '../src/components/SvgIcon';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +22,7 @@ function Tabs() {
           // backgroundColor: 'transparent',
           // backgroundColor: BLACK_COLOR,
 
-          backgroundColor: '#002B5B',
+          // backgroundColor: '#002B5B',
           position: 'absolute',
           left: 0,
           bottom: 0,
@@ -34,7 +35,7 @@ function Tabs() {
         },
         tabBarActiveTintColor: '#F9F5EB',
         headerStyle: {
-          backgroundColor: '#002B5B',
+          // backgroundColor: '#002B5B',
         },
         headerTitleStyle: {
           // color: BLACK_COLOR,
@@ -49,15 +50,15 @@ function Tabs() {
         name='해우소'
         component={Main}
         options={{
-          // tabBarIcon: ({ focused, color, size }) => {
-          //   return (
-          //     <SvgIcon
-          //       name='Home'
-          //       stroke={focused ? 'white' : '#797979'}
-          //       strokeWidth={focused ? 2 : 1.5}
-          //     />
-          //   );
-          // },
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <SvgIcon
+                name='Home'
+                stroke={focused ? 'white' : '#797979'}
+                strokeWidth={focused ? 2 : 1.5}
+              />
+            );
+          },
           // headerRight: () =>
           //   isLogin ? <CustomAlarmButton path={'Home'} /> : null,
           // tabBarLabel: () => { return <Text>dd</Text> },
