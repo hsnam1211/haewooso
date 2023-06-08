@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/native';
 
 import { useRecoilState } from 'recoil';
+import OnboardingScreen from '../screens/OnboardingScreen';
 
 const NativeStack = createNativeStackNavigator();
 
@@ -19,16 +20,10 @@ const StackCard = () => {
         headerTitleAlign: 'center',
       }}
     >
-      {/* <NativeStack.Screen
-        name=''
-        options={{
-          title: '상세보기',
-          headerLeft: () => <CustomBackButton />,
-          headerRight: (e) =>
-            isLogin ? <CustomAlarmButton path={'ItemDetail'} /> : null,
-        }}
-        component={ItemDetail}
-      /> */}
+      <NativeStack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+      />
     </NativeStack.Navigator>
   );
 };
