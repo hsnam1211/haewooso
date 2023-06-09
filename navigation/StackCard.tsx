@@ -19,11 +19,16 @@ const StackCard = () => {
       screenOptions={{
         headerBackTitleVisible: true,
         headerTitleAlign: 'center',
+        gestureEnabled: false,
       }}
     >
       <NativeStack.Screen
         name="Onboarding"
         component={OnboardingScreen}
+        options={{
+          gestureEnabled: false,
+          animation: 'default'
+        }}
       />
     </NativeStack.Navigator>
   );

@@ -1,6 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
+import {
+  Alert,
+  Linking,
+  StatusBar,
+  Text,
+  View,
+  AppState,
+  Platform,
+} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Root from './navigation/Root';
 import { PermissionsAndroid } from 'react-native';
@@ -120,6 +127,8 @@ export default function App() {
 
     // return () => subscribeToMessages();
   }, []);
+
+  if (Platform.OS === 'ios') StatusBar.setBarStyle('dark-content', true);
 
   return (
     <RecoilRoot>
