@@ -72,13 +72,13 @@ function Main() {
   }, [])
 
   const data = [
-    { id: '1', title: 'Item 1' },
-    { id: '2', title: 'Item 2' },
-    { id: '3', title: 'Item 3' },
-    { id: '4', title: 'Item 4' },
-    { id: '5', title: 'Item 5' },
-    { id: '6', title: 'Item 1' },
-    { id: '7', title: 'Item 2' },
+    { id: '1', title: '로또 번호 좀여', description: '로또 번호 좀 알려주세여~' },
+    { id: '2', title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
+    { id: '3', title: '', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
+    { id: '4', title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
+    { id: '5', title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
+    { id: '6', title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
+    { id: '7', title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
     { id: '8', title: 'Item 3' },
     { id: '9', title: 'Item 4' },
     { id: '10', title: 'Item 5' },
@@ -86,36 +86,60 @@ function Main() {
 
   const PushCountComponent = () => {
     return (
-      <View style={{ padding: 16, backgroundColor: '#002B5B', width: width }}>
-        <Text style={{ color: 'white', textAlign: 'center' }}>
-          🚽 오늘 해우소 사용 가능 횟수는 총 5회 🚽
+      <View style={{ padding: 16, width: width, marginTop: 16}}>
+        <Text style={{ color: '#413d34', fontSize: 22, textAlign: 'left', marginBottom: 16 }}>
+          안녕하세요.
+        </Text>
+        <Text style={{ color: '#2A2322', fontSize: 26, textAlign: 'left', fontWeight: 'bold', marginBottom: 8 }}>
+          당신의 근심 해소공간
+        </Text>
+        <Text style={{ color: '#2A2322', fontSize: 26, textAlign: 'left', fontWeight: 'bold', marginBottom: 8 }}>
+          해우소입니다.
         </Text>
       </View>
     );
+    // return (
+    //   <View style={{ padding: 16, backgroundColor: '#002B5B', width: width }}>
+    //     <Text style={{ color: 'white', textAlign: 'center' }}>
+    //       🚽 오늘 해우소 사용 가능 횟수는 총 5회 🚽
+    //     </Text>
+    //   </View>
+    // );
   };
 
   const Header = () => {
     return (
       <View>
-        <View style={{
-          elevation: 5, // 안드로이드 그림자
-          shadowColor: '#000', // iOS 그림자 색상
-          shadowOffset: { width: 0, height: 3 }, // iOS 그림자 오프셋
-          shadowOpacity: 0.8, // iOS 그림자 투명도
-          shadowRadius: 4, // iOS 그림자 반경,
-          backgroundColor: '#002B5B', width: width - 24, borderRadius: 8, height: 150, marginTop: 15, marginBottom: 10,
-          justifyContent: 'center'
-        }}>
-          <Text style={{ color: 'white', textAlign: 'center', marginBottom: 20 }}>
-            해우소 사용 가능 횟수를 다 소진하셨다면...
+        <View style={{ padding: 16, width: width, marginTop: 18}}>
+          <Text style={{ color: '#413d34', fontSize: 22, textAlign: 'left', marginBottom: 16 }}>
+            안녕하세요.
           </Text>
-          <Text style={{ color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>
-            광고 보고 다시 근심 털기 📺
+          <Text style={{ color: '#413d34', fontSize: 26, textAlign: 'left', fontWeight: 'bold', marginBottom: 8 }}>
+            당신의 근심 해소공간
+          </Text>
+          <Text style={{ color: '#413d34', fontSize: 26, textAlign: 'left', fontWeight: 'bold', marginBottom: 8 }}>
+            해우소입니다.
           </Text>
         </View>
-        <View style={{ marginTop: 20, marginBottom: 10 }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 25, }}>
-            공개 된 근심 거리
+        <View style={{
+          // elevation: 5, // 안드로이드 그림자
+          // shadowColor: '#000', // iOS 그림자 색상
+          // shadowOffset: { width: 0, height: 3 }, // iOS 그림자 오프셋
+          // shadowOpacity: 0.8, // iOS 그림자 투명도
+          // shadowRadius: 4, // iOS 그림자 반경,
+          backgroundColor: '#2A2322', width: width - 24, borderRadius: 10, height: 100, marginTop: 15, marginBottom: 10,
+          justifyContent: 'center'
+        }}>
+          <Text style={{ color: 'white', textAlign: 'center', fontSize: 16, marginBottom: 10 }}>
+            광고 보고 더 머물다 가세요.
+          </Text>
+          <Text style={{ color: 'white', textAlign: 'center', fontSize: 16, fontWeight: 'bold' }}>
+            여기예요 📺
+          </Text>
+        </View>
+        <View style={{ marginTop: 30, marginBottom: 10 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 13 }}>
+            공개 된 근심
           </Text>
         </View>
       </View>
@@ -132,8 +156,22 @@ function Main() {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={{ padding: 16, width: width - 24, height: 80, marginTop: 7, marginBottom: 7, backgroundColor: '#E4DCCF', borderRadius: 6 }}>
-        <Text>{item.title}</Text>
+      <View style={{ 
+        padding: 14,
+        width: width - 24,
+        // height: 120,
+        marginTop: 7,
+        marginBottom: 7,
+        // backgroundColor: '#FBF9F4',
+        // backgroundColor: '#ffffff',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#413d34'
+      }}>
+        <Text style={{color: '#413d34', fontSize: 16, fontWeight: 'bold', padding: 2}}>{item.title}</Text>
+        <View style={{borderRadius: 6, backgroundColor: '#ffffff', padding: 10, marginTop: 8}}>
+          <Text style={{color: '#413d34', fontSize: 12, fontWeight: 'bold'}}>{item.description}</Text>
+        </View>
       </View>
     );
   };
@@ -154,14 +192,14 @@ function Main() {
   return (
     <View
       style={{
-        backgroundColor: '#ffffff',
+        backgroundColor: '#FBF9F4',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
       <Container>
-        <PushCountComponent />
+        {/* <PushCountComponent /> */}
         {/* <View >
           <Animatable.Text animation="fadeInUp" iterationCount={1} duration={2000} direction="alternate">Up and down you go</Animatable.Text>
           <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ textAlign: 'center' }}>❤️</Animatable.Text>
