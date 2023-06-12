@@ -22,7 +22,7 @@ function Tabs() {
           // backgroundColor: 'transparent',
           // backgroundColor: BLACK_COLOR,
 
-          // backgroundColor: '#002B5B',
+          backgroundColor: '#2A2322',
           position: 'absolute',
           left: 0,
           bottom: 0,
@@ -50,11 +50,12 @@ function Tabs() {
         name='해우소'
         component={Main}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <SvgIcon
                 name='Home'
-                stroke={focused ? 'white' : '#797979'}
+                stroke={focused ? '#FBF9F4' : '#797979'}
                 strokeWidth={focused ? 2 : 1.5}
               />
             );
@@ -81,6 +82,16 @@ function Tabs() {
         component={Sample}
         options={{
           tabBarLabel: 'Sample',
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <SvgIcon
+                name='heart'
+                stroke={focused ? '#FBF9F4' : '#797979'}
+                strokeWidth={focused ? 2 : 1.5}
+                size={24}
+              />
+            );
+          },
           tabBarLabelStyle: {
             fontSize: 12,
           },
