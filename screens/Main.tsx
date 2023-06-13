@@ -12,6 +12,7 @@ import { Easing } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import SvgIcon from '../src/components/SvgIcon';
 import { taptic } from '../src/util/taptic';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -19,6 +20,7 @@ const Container = styled(View)`
 `;
 
 function Main() {
+  const navigation = useNavigation()
   const [message, setMessage] = useState(undefined)
   // const [msgData, setMsgData] = useRecoilState(getMessageState)
 
@@ -180,7 +182,7 @@ function Main() {
         </Animated.View>
 
         <View style={{
-          backgroundColor: '#413d34', width: width - 24, borderRadius: 10, height: 100, marginTop: 12, marginBottom: 10,
+          backgroundColor: '#413d34', width: width - 24, borderRadius: 3, height: 100, marginTop: 12, marginBottom: 10,
           justifyContent: 'center'
         }}>
           <Text style={{ color: 'white', textAlign: 'center', fontSize: 16, marginBottom: 10 }}>
@@ -209,6 +211,10 @@ function Main() {
             }}
             onPressOut={() => {
               taptic()
+              navigation.navigate('StackModal', {
+                screen: 'OnboardingScreen',
+                animation: 'fade'
+              });
             }}
           >
             <Text style={{ color: 'rgba(60, 50, 48, 0.6)', textAlign: 'center', paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }}>
@@ -232,13 +238,13 @@ function Main() {
         width: width - 24,
         marginTop: 7,
         marginBottom: 7,
-        borderRadius: 10,
-        borderWidth: 1,
+        borderRadius: 3,
+        borderWidth: 0.5,
         borderColor: '#413d34'
       }}>
-        <Text style={{ color: '#413d34', fontWeight: 'bold', padding: 2 }}>{item.title}</Text>
-        <View style={{ borderRadius: 6, backgroundColor: '#ffffff', padding: 10, marginTop: 8 }}>
-          <Text style={{ color: '#413d34', fontWeight: 'bold' }}>{item.description}</Text>
+        <Text style={{ color: '#413d34', fontWeight: 'bold', padding: 2, fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.title}</Text>
+        <View style={{ borderRadius: 3, backgroundColor: '#ffffff', padding: 10, marginTop: 8 }}>
+          <Text style={{ color: '#413d34', fontWeight: 'bold', fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.description}</Text>
         </View>
       </View>
     );

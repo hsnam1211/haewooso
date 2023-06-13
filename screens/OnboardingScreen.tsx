@@ -20,7 +20,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import * as Animatable from "react-native-animatable";
 import SvgIcon from '../src/components/SvgIcon';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { trigger } from "react-native-haptic-feedback";
 import { taptic } from '../src/util/taptic';
 
@@ -29,9 +29,9 @@ const calcDelay = (index) => {
   return 1000 + 4500 * offset
 }
 
-const OnboardingScreen = ({ navigation }) => {
+const OnboardingScreen = () => {
   const isFocused = useIsFocused();
-
+  const navigation = useNavigation()
   useEffect(() => {
     // 온보딩 화면이 표시될 때마다 헤더 숨김 처리
     navigation.setOptions({ headerShown: false });
@@ -67,7 +67,7 @@ const OnboardingScreen = ({ navigation }) => {
 
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingRight: 30, paddingLeft: 30 }}>
+    <View style={{ backgroundColor: '#FBF9F4', flex: 1, justifyContent: 'center', alignItems: 'center', paddingRight: 30, paddingLeft: 30 }}>
       <Animatable.View
         ref={AnimationRef1}
         animation="fadeInUp"
@@ -79,8 +79,8 @@ const OnboardingScreen = ({ navigation }) => {
         style={{ position: 'absolute' }}
         useNativeDriver={true}
       >
-        <Text style={{ textAlign: 'center' }}>해우소(解憂所) : ‘근심을 해결하는 장소' 라는 뜻의 사찰에서</Text>
-        <Text style={{ textAlign: 'center', marginTop: 6 }}>화장실을 이르는 말.</Text>
+        <Text style={{ textAlign: 'center', fontSize: Platform.select({ ios: 14, android: 12 }) }}>해우소(解憂所) : ‘근심을 해결하는 장소' 라는 뜻의 사찰에서</Text>
+        <Text style={{ textAlign: 'center', marginTop: 6, fontSize: Platform.select({ ios: 14, android: 12 }) }}>화장실을 이르는 말.</Text>
       </Animatable.View>
       <Animatable.Text
         ref={AnimationRef2}
@@ -90,7 +90,7 @@ const OnboardingScreen = ({ navigation }) => {
         onAnimationEnd={() => onAnimationEnd(AnimationRef2)}
         onAnimationBegin={() => setDuration(2000)}
         iterationDelay={calcDelay(2)}
-        style={{ position: 'absolute' }}
+        style={{ position: 'absolute', fontSize: Platform.select({ ios: 14, android: 12 }) }}
         useNativeDriver={true}
       >
         오늘 하루 당신에게 쌓인 근심을
@@ -103,7 +103,7 @@ const OnboardingScreen = ({ navigation }) => {
         onAnimationEnd={() => onAnimationEnd(AnimationRef3)}
         onAnimationBegin={() => setDuration(2000)}
         iterationDelay={calcDelay(3)}
-        style={{ position: 'absolute' }}
+        style={{ position: 'absolute', fontSize: Platform.select({ ios: 14, android: 12 }) }}
         useNativeDriver={true}
       >
         익명의 누군가에게 전달해보는 건 어떨까요?
@@ -116,7 +116,7 @@ const OnboardingScreen = ({ navigation }) => {
         onAnimationEnd={() => onAnimationEnd(AnimationRef4)}
         onAnimationBegin={() => setDuration(2000)}
         iterationDelay={calcDelay(4)}
-        style={{ position: 'absolute' }}
+        style={{ position: 'absolute', fontSize: Platform.select({ ios: 14, android: 12 }) }}
         useNativeDriver={true}
       >
         그리고 익명의 누군가에게 근심에 대한 답장도 받아보세요.
@@ -128,7 +128,7 @@ const OnboardingScreen = ({ navigation }) => {
         duration={500}
         onAnimationEnd={() => onAnimationHandle()}
         iterationDelay={calcDelay(5)}
-        style={{ position: 'absolute' }}
+        style={{ position: 'absolute', fontSize: Platform.select({ ios: 14, android: 12 }) }}
         useNativeDriver={true}
       >
         <SvgIcon
