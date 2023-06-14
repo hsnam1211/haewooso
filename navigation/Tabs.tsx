@@ -8,6 +8,7 @@ import DeviceInfo from 'react-native-device-info';
 import Main from '../screens/Main';
 import Sample from '../screens/Sample';
 import SvgIcon from '../src/components/SvgIcon';
+import SamplePushToken from '../screens/SamplePushToken';
 
 const Tab = createBottomTabNavigator();
 
@@ -78,10 +79,10 @@ function Tabs() {
       // }}
       />
       <Tab.Screen
-        name='Sample'
-        component={Sample}
+        name='SamplePushToken'
+        component={SamplePushToken}
         options={{
-          tabBarLabel: 'Sample',
+          tabBarLabel: 'SamplePushToken',
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <SvgIcon
@@ -91,6 +92,15 @@ function Tabs() {
                 size={24}
               />
             );
+          },
+          headerStyle: {
+            backgroundColor: '#2A2322',
+          },
+          headerTitleStyle: {
+            // color: BLACK_COLOR,
+            color: '#F9F5EB',
+            fontSize: 20,
+            fontWeight: '500',
           },
           tabBarLabelStyle: {
             fontSize: 12,

@@ -14,7 +14,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from 'react-query';
@@ -25,8 +25,11 @@ import SvgIcon from '../src/components/SvgIcon';
 import { height, width } from '../src/util/screenDimensions';
 import axios from 'axios';
 import { taptic } from '../src/util/taptic';
+import CheckBox from '@react-native-community/checkbox';
 
 function PushScreen() {
+  const [receiveCheck, setReceiveCheck] = useState(true)
+  const [mainCheck, setMainCheck] = useState(true)
   const [description, setDescription] = useState('');
 
   const isEmptyDescription = (text) => {
@@ -62,6 +65,30 @@ function PushScreen() {
     Keyboard.dismiss();
   };
 
+  const CustomCheckBox = ({ checkState, setCheckState }) => {
+    return (Platform.OS === 'ios' ?
+      <CheckBox
+        onCheckColor={'#000000'}
+        tintColor={'#000000'}
+        onTintColor={'#000000'}
+        boxType={'square'}
+        lineWidth={1}
+        disabled={false}
+        value={checkState}
+        onValueChange={(newValue) => setCheckState(newValue)}
+        style={{ width: 14, height: 14, marginRight: 7 }}
+      />
+      :
+      <CheckBox
+        style={{ transform: [{ scale: 0.8 }] }}
+        tintColors={{ true: 'black', false: 'black' }}
+        disabled={false}
+        value={checkState}
+        onValueChange={(newValue) => setCheckState(newValue)}
+      />)
+  }
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.select({ ios: undefined, android: undefined })}
@@ -94,11 +121,11 @@ function PushScreen() {
             <View style={{ borderWidth: 0.5, borderColor: '#2A2322', borderRadius: 3, padding: 20, flexDirection: 'row', position: 'absolute', bottom: 0, marginBottom: 70, width: width - 40, alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={{ height: '80%', flexDirection: 'column', justifyContent: 'space-around' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View style={{ backgroundColor: 'black', width: 12, height: 12, marginRight: 5 }} />
-                  <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>답장 받고 싶지 않아요.</Text>
+                  <CustomCheckBox checkState={receiveCheck} setCheckState={setReceiveCheck} />
+                  <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>누군가에게 답장을 받고 싶어요.</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View style={{ backgroundColor: 'black', width: 12, height: 12, marginRight: 5 }} />
+                  <CustomCheckBox checkState={mainCheck} setCheckState={setMainCheck} />
                   <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>메인 화면에 공개할래요.</Text>
                 </View>
               </View>

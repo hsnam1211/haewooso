@@ -66,7 +66,7 @@ function Main() {
   useEffect(() => {
     const subscribeToMessages = messaging().onMessage(
       async (remoteMessage) => {
-        alert('?@')
+        alert('fore ground')
         console.log('Main subscribeToMessages', remoteMessage)
         setMessage({
           body: remoteMessage?.notification?.body,
@@ -290,6 +290,15 @@ function Main() {
       }}
     >
       <Container>
+        {message?.title &&
+          <Animated.View style={{ zIndex: 100000, alignItems: 'center', backgroundColor: 'transparent', }}>
+            <Pressable onPress={() => { setMessage(undefined) }} style={{ borderBottomRightRadius: 6, borderBottomLeftRadius: 6, padding: 20, width: width, backgroundColor: 'gray' }}>
+              <Text style={{ color: '#fff' }}>{message?.title}</Text>
+              <Text style={{ color: '#fff' }}>{message?.body}</Text>
+              <Text>확인 되었으면 클릭!</Text>
+            </Pressable>
+          </Animated.View>
+        }
         <Animated.View style={{ height: Platform.OS === 'ios' ? 50 : 60, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100, opacity: opacity }}>
           <View style={{ flexDirection: 'row', zIndex: 100 }}>
             <View style={{ paddingTop: Platform.OS === 'ios' ? 10 : 16, paddingLeft: 28, }}>
@@ -339,10 +348,6 @@ function Main() {
           />
         </Animated.View>
         <MainFlatList />
-        {message?.title && <Pressable onPress={() => { setMessage(undefined) }} style={{ borderRadius: 6, padding: 20, width: width - 40, height: 400, backgroundColor: 'gray' }}>
-          <Text style={{ color: '#fff' }}>{message?.title}</Text>
-          <Text style={{ color: '#fff' }}>{message?.body}</Text>
-        </Pressable>}
       </Container>
     </View>
   );
