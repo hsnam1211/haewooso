@@ -212,7 +212,7 @@ function Main() {
             onPressOut={() => {
               taptic()
               navigation.navigate('StackModal', {
-                screen: 'OnboardingScreen',
+                screen: 'PushScreen',
                 animation: 'fade'
               });
             }}
@@ -233,7 +233,7 @@ function Main() {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={{
+      <Pressable style={{
         padding: 14,
         width: width - 24,
         marginTop: 7,
@@ -241,12 +241,20 @@ function Main() {
         borderRadius: 3,
         borderWidth: 0.5,
         borderColor: '#413d34'
-      }}>
+      }}
+        onPress={() => {
+          taptic()
+          navigation.navigate('StackCard', {
+            screen: 'DetailMessage',
+            params: item,
+          });
+        }}
+      >
         <Text style={{ color: '#413d34', fontWeight: 'bold', padding: 2, fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.title}</Text>
         <View style={{ borderRadius: 3, backgroundColor: '#ffffff', padding: 10, marginTop: 8 }}>
           <Text style={{ color: '#413d34', fontWeight: 'bold', fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.description}</Text>
         </View>
-      </View>
+      </Pressable>
     );
   };
 
