@@ -139,7 +139,7 @@ function PushScreen() {
             }
             }
           />
-          <Text>{`${description.length}/${maxLength}`}</Text>
+          <Text style={{ width: '100%', textAlign: 'right', color: 'gray' }}>{`${description.length}/${maxLength}`}</Text>
           {isEmptyDescription(description) &&
             <View style={{ borderWidth: 0.5, borderColor: '#2A2322', borderRadius: 3, padding: 20, flexDirection: 'row', position: 'absolute', bottom: 0, marginBottom: 70, width: width - 40, alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={{ height: '80%', flexDirection: 'column', justifyContent: 'space-around' }}>
