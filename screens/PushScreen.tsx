@@ -31,6 +31,8 @@ function PushScreen() {
   const [receiveCheck, setReceiveCheck] = useState(true)
   const [mainCheck, setMainCheck] = useState(true)
   const [description, setDescription] = useState('');
+  const maxLength = 300;
+  const maxLines = 12;
 
   const isEmptyDescription = (text) => {
     return !(!text || text.trim().length === 0)
@@ -43,6 +45,16 @@ function PushScreen() {
       return description;
     }
   }
+
+  const handleTextChange = (inputText) => {
+    if (getNumberOfLines(inputText) <= maxLines && inputText.length <= maxLength) {
+      setDescription(inputText);
+    }
+  };
+
+  const getNumberOfLines = (text) => {
+    return text.split('\n').length;
+  };
 
   const handlePress = () => {
     // axios 호출
@@ -108,15 +120,16 @@ function PushScreen() {
               textAlignVertical: 'center',
               borderBottomColor: '#2A2322',
               borderBottomWidth: 0.5,
-              lineHeight: 25
+              lineHeight: 25,
             }}
             value={description}
-            onChangeText={text => setDescription(text)}
+            // onChangeText={text => setDescription(text)}
+            onChangeText={handleTextChange}
             placeholder={!isEmptyDescription(description) ? '근심을 털어놓아보세요. 익명의 누군가에게 전달됩니다.' : ''}
             multiline={true}
-            onSubmitEditing={handlePress}
+          // onSubmitEditing={handlePress}
           />
-
+          <Text>{`${description.length}/${maxLength}`}</Text>
           {isEmptyDescription(description) &&
             <View style={{ borderWidth: 0.5, borderColor: '#2A2322', borderRadius: 3, padding: 20, flexDirection: 'row', position: 'absolute', bottom: 0, marginBottom: 70, width: width - 40, alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={{ height: '80%', flexDirection: 'column', justifyContent: 'space-around' }}>
@@ -141,6 +154,7 @@ function PushScreen() {
                 >
                   <SvgIcon
                     name='haewoosoLogo'
+                    fill='#000000'
                     stroke='#797979'
                     strokeWidth='1.5'
                     size={40}

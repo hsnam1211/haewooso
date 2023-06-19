@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 
-import { View, Text, Pressable, AppState, AppStateStatus, FlatList, Platform, Animated, VirtualizedList } from 'react-native';
+import { View, Text, Pressable, AppState, AppStateStatus, FlatList, Platform, Animated, VirtualizedList, SectionList } from 'react-native';
 import styled from 'styled-components';
 import { Storage } from '../src/util/storage'
 import { getMessageState } from '../src/recoil/atoms';
@@ -23,6 +23,37 @@ function Main() {
   const navigation = useNavigation()
   const [message, setMessage] = useState(undefined)
   // const [msgData, setMsgData] = useRecoilState(getMessageState)
+
+  const data = [
+    { title: 'pass', data: [{ id: 1 }] },
+    {
+      title: 'Header',
+      data: [
+        {
+          title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ',
+          description: `유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
+        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
+        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
+        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
+        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
+        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
+        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ` },
+        { title: 'asdasd', description: '리 자야' },
+        {
+          title: '벌써 4시다.. ', description: `내일 할 거 : 
+        1. SEND_MSG 테이블에 성공한 알람 데이터 INSERT
+        2. 랜덤 수신자 토큰 조회 쿼리 작성
+        3. putAllData 방법 분석` },
+        { title: '넘 힘들다!', description: 'ㅜㅜ' },
+        { title: '일찍 자는 방법', description: '빨리 자야하는데' },
+        { title: '유튜브', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
+        { title: 'Item 3' },
+        { title: 'Item 4' },
+        { title: 'Item 5' },
+        { title: '로또 번호 좀여', description: '로또 번호 좀 알려주세여~' }
+      ]
+    },
+  ];
 
   const appState = useRef(AppState.currentState);
 
@@ -78,94 +109,73 @@ function Main() {
     return () => subscribeToMessages();
   }, [])
 
-  const data = [
-    { id: '1', title: '로또 번호 좀여', description: '로또 번호 좀 알려주세여~' },
-    { id: '2', title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
-    { id: '3', title: 'asdasd', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
-    { id: '4', title: '벌써 4시다.. ', description: '얼른 자야하는데...' },
-    { id: '5', title: '넘 힘들다!', description: 'ㅜㅜ' },
-    { id: '6', title: '일찍 자는 방법', description: '빨리 자야하는데' },
-    { id: '7', title: '유튜브', description: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ' },
-    { id: '8', title: 'Item 3' },
-    { id: '9', title: 'Item 4' },
-    { id: '10', title: 'Item 5' },
-  ];
 
   const scrollY = useRef(new Animated.Value(0)).current;
-  const Header = () => {
-    const opacity = scrollY.interpolate({
-      inputRange: [0, Platform.OS === 'ios' ? 100 : 110],
-      outputRange: [2, 0],
-      extrapolate: 'clamp',
-    });
 
-    const logoOpacity = scrollY.interpolate({
-      inputRange: [0, Platform.OS === 'ios' ? 90 : 100],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    });
-
-    const logoText = scrollY.interpolate({
-      inputRange: [0, Platform.OS === 'ios' ? 150 : 160],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    });
-
+  const HeaderComponent = () => {
     return (
-      <View>
-        <Animated.View style={{
-          padding: 16,
-          width: width,
-          marginTop: 20,
+      <View style={{
+        paddingLeft: 16,
+        marginTop: 20,
+      }}
+      >
+        <Text
+          style={{
+            color: '#413d34',
+            fontSize: 22,
+            textAlign: 'left',
+            marginBottom: 16,
+          }}
+        >
+          안녕하세요.
+        </Text>
+        <Text
+          style={{
+            color: '#413d34',
+            fontSize: 26,
+            textAlign: 'left',
+            fontWeight: 'bold',
+            marginBottom: 8,
+          }}
+        >
+          당신의 근심 해소공간
+        </Text>
+      </View>
+    )
+  }
+  const renderSectionHeader = ({ section }) => {
+    if (section.title !== 'pass') {
+      return (<View>
+        <View style={{
+          paddingLeft: 16,
+          paddingTop: Platform.OS === 'ios' ? 8 : 11,
+          paddingBottom: Platform.OS === 'ios' ? 8 : 6,
+          backgroundColor: '#FBF9F4',
         }}
         >
-          <Animated.Text
-            style={{
-              color: '#413d34',
-              fontSize: 22,
-              opacity: opacity,
-              textAlign: 'left',
-              marginBottom: 16,
-            }}
-          >
-            안녕하세요.
-          </Animated.Text>
-          <Animated.Text
-            style={{
-              color: '#413d34',
-              fontSize: 26,
-              textAlign: 'left',
-              fontWeight: 'bold',
-              marginBottom: 8,
-              opacity: opacity,
-            }}
-          >
-            당신의 근심 해소공간
-          </Animated.Text>
           <View style={{ flexDirection: 'row' }}>
-            <Animated.View style={{ opacity: logoOpacity, }}>
+            <View>
               <SvgIcon
                 name='haewoosoLogo'
                 stroke='#797979'
                 strokeWidth='1.5'
+                fill='#000000'
                 size={40}
               />
-            </Animated.View>
-            <Animated.Text
+            </View>
+            <Text
               style={{
                 paddingLeft: 10,
                 color: '#413d34',
                 fontSize: 26,
                 textAlign: 'left',
                 fontWeight: 'bold',
-                // marginBottom: 8,
                 top: Platform.OS === 'ios' ? 9 : 0,
-                opacity: logoOpacity,
               }}
             >
               해우소
-            </Animated.Text>
-            <Animated.Text
+            </Text>
+            <Text
               style={{
                 color: '#413d34',
                 fontSize: 26,
@@ -173,14 +183,21 @@ function Main() {
                 fontWeight: 'bold',
                 marginBottom: 8,
                 top: Platform.OS === 'ios' ? 7 : 0,
-                opacity: logoText,
               }}
             >
               입니다.
-            </Animated.Text>
+            </Text>
           </View>
-        </Animated.View>
+        </View>
+      </View>)
+    } else {
+      return <></>
+    }
+  }
 
+  const MidSection = () => {
+    return (
+      <>
         <View style={{
           backgroundColor: '#413d34', width: width - 24, borderRadius: 3, height: 100, marginTop: 12, marginBottom: 10,
           justifyContent: 'center'
@@ -227,54 +244,86 @@ function Main() {
             공개 된 근심
           </Text>
         </View>
+      </>
+    )
+  }
+
+  const renderItem = ({ item, index }) => {
+    if (item.id !== 1) {
+      return (
+        <>
+          {index === 0 &&
+            <MidSection />
+          }
+          <Pressable style={{
+            padding: 14,
+            width: width - 24,
+            marginTop: 7,
+            marginBottom: 7,
+            borderRadius: 3,
+            borderWidth: 0.5,
+            borderColor: '#413d34'
+          }}
+            onPress={() => {
+              taptic()
+              navigation.navigate('StackCard', {
+                screen: 'DetailMessage',
+                params: item,
+              });
+            }}
+          >
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 10 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ backgroundColor: '#2A2322', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+                  <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+                    메시지 전송 가능
+                  </Text>
+                </View>
+                <View style={{ backgroundColor: 'lightgray', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+                  <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#000000' }}>
+                    답변 완료
+                  </Text>
+                </View>
+              </View>
+              <View style={{ backgroundColor: '#575241', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 50 }}>
+                <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+                  남은 답변 횟수 : 1/3
+                </Text>
+              </View>
+            </View>
+            {/* <Text style={{ color: '#413d34', fontWeight: 'bold', padding: 2, fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.title}</Text> */}
+            <View style={{ borderRadius: 3, backgroundColor: '#ffffff', padding: 10, marginTop: 8 }}>
+              <Text style={{ color: '#413d34', fontWeight: 'bold', fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.description}</Text>
+            </View>
+          </Pressable>
+        </>)
+    } else {
+      return (
+        <HeaderComponent />
+      )
+    }
+  }
+
+  const ListEmptyComponent = () => {
+    return (
+      <View style={{ padding: 16, flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50 }}>
+        <Text style={{ color: 'rgba(42, 35, 34, .4)', fontSize: Platform.select({ ios: 14, android: 13 }), fontWeight: 'bold' }}>아직 공개 된 근심이 없어요.</Text>
       </View>
     );
   };
 
-  const renderItem = ({ item }) => {
-    return (
-      <Pressable style={{
-        padding: 14,
-        width: width - 24,
-        marginTop: 7,
-        marginBottom: 7,
-        borderRadius: 3,
-        borderWidth: 0.5,
-        borderColor: '#413d34'
-      }}
-        onPress={() => {
-          taptic()
-          navigation.navigate('StackCard', {
-            screen: 'DetailMessage',
-            params: item,
-          });
-        }}
-      >
-        <Text style={{ color: '#413d34', fontWeight: 'bold', padding: 2, fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.title}</Text>
-        <View style={{ borderRadius: 3, backgroundColor: '#ffffff', padding: 10, marginTop: 8 }}>
-          <Text style={{ color: '#413d34', fontWeight: 'bold', fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.description}</Text>
-        </View>
-      </Pressable>
-    );
-  };
-
-  // const Footer = () => {
-  //   return (
-  //     <View style={{ padding: 16, backgroundColor: 'lightgray' }}>
-  //       <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Footer</Text>
-  //     </View>
-  //   );
-  // };
   const MainFlatList = () => {
     return (
-      <Animated.FlatList
-        data={data}
+      <SectionList
+        sections={data}
         renderItem={renderItem}
-        // ListFooterComponent={<Footer />}
-        ListHeaderComponent={<Header />}
-        keyExtractor={(item) => item?.id}
-        contentContainerStyle={{ marginLeft: 12 }}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
+        keyExtractor={(item, index) => item + index}
+        stickySectionHeadersEnabled={true}
+        renderSectionHeader={renderSectionHeader}
+        showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          const scrollOffset = event.nativeEvent.contentOffset.y;
+        }}
       />
     );
   };
@@ -284,6 +333,7 @@ function Main() {
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
+
   return (
     <View
       style={{
@@ -305,56 +355,7 @@ function Main() {
               <Text style={{ color: '#fff' }}>{message?.body}</Text>
               <Text>확인 되었으면 클릭!</Text>
             </Pressable>
-          </Animated.View>
-        }
-        <Animated.View style={{ height: Platform.OS === 'ios' ? 50 : 60, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100, opacity: opacity }}>
-          <View style={{ flexDirection: 'row', zIndex: 100 }}>
-            <View style={{ paddingTop: Platform.OS === 'ios' ? 10 : 16, paddingLeft: 28, }}>
-              <SvgIcon
-                name='haewoosoLogo'
-                stroke='#797979'
-                strokeWidth='1.5'
-                size={40}
-              />
-            </View>
-            <Text style={{ color: 'black', fontSize: 26, fontWeight: 'bold', textAlign: 'left', paddingTop: Platform.OS === 'ios' ? 10 : 16, top: Platform.OS === 'ios' ? 10 : 0, paddingLeft: 10 }}>
-              해우소
-            </Text>
-          </View>
-          <LinearGradient
-            colors={[
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 1)',
-              'rgba(251, 249, 244, 0.9)',
-              'rgba(251, 249, 244, 0.8)',
-              'rgba(251, 249, 244, 0.7)',
-              'rgba(251, 249, 244, 0.6)',
-              'rgba(251, 249, 244, 0.5)',
-              'rgba(251, 249, 244, 0.4)',
-              'rgba(251, 249, 244, 0.3)',
-              'rgba(251, 249, 244, 0.2)',
-              'rgba(251, 249, 244, 0.1)',
-              'rgba(251, 249, 244, 0)'
-            ]}
-            style={{
-              height: Platform.OS === 'ios' ? 110 : 130,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-          />
-        </Animated.View>
+          </Animated.View>}
         <MainFlatList />
       </Container>
     </View>

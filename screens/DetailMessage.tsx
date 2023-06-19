@@ -27,6 +27,7 @@ import axios from 'axios';
 import { taptic } from '../src/util/taptic';
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 function DetailMessage({ route }) {
   const data = route.params
@@ -96,27 +97,54 @@ function DetailMessage({ route }) {
   return (
     <View
       style={{ flex: 1, }}>
-      <View style={{ backgroundColor: '#FBF9F4', flex: 1, paddingTop: 70, alignItems: 'flex-start', paddingRight: 30, paddingLeft: 30 }}>
-        <Text
-          style={{
-            paddingLeft: 5,
-            paddingRight: 5,
-            paddingBottom: 14,
-            width: width - 40,
-            fontSize: Platform.select({ ios: 14, android: 13 }),
-            marginTop: 7,
-            marginBottom: 7,
-            paddingTop: 24,
-            textAlignVertical: 'center',
-            // borderBottomColor: '#2A2322',
-            // borderBottomWidth: 0.5,
-            lineHeight: 25
-          }}
-        >
-          {data.description}
-        </Text>
+      <View style={{ backgroundColor: '#FBF9F4', flex: 1, paddingTop: Platform.select({ ios: 70, android: 30 }), alignItems: 'center', paddingRight: 20, paddingLeft: 20 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ backgroundColor: '#2A2322', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+              <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+                메시지 전송 가능
+              </Text>
+            </View>
+            <View style={{ backgroundColor: 'lightgray', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+              <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#000000' }}>
+                답변 완료
+              </Text>
+            </View>
+          </View>
+          <View style={{ backgroundColor: '#575241', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 50 }}>
+            <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+              남은 답변 횟수 : 1/3
+            </Text>
+          </View>
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <View style={{
+            borderBottomColor: '#2A2322',
+            borderBottomWidth: 0.5,
+            marginTop: Platform.select({ ios: 0, android: 0 }),
+            // marginBottom: Platform.select({ ios: 30, android: 30 })
+          }}>
+            <Text
+              style={{
+                paddingLeft: 5,
+                paddingRight: 5,
+                paddingBottom: 14,
+                width: width - 40,
+                fontSize: Platform.select({ ios: 14, android: 13 }),
+                marginTop: 7,
+                marginBottom: Platform.select({ ios: 7, android: 13 }),
+                paddingTop: 24,
+                textAlignVertical: 'center',
+                lineHeight: 25
+              }}
+            >
+              {/* 본문 */}
+              {data.description}
+            </Text>
+          </View>
+        </View>
         <ScrollView>
-          <View style={{ width: width - 60 }}>
+          <View style={{ width: width - 60, marginTop: 30 }}>
             <View style={{ flexDirection: 'row', height: 20, top: 3 }}>
               <View style={{ backgroundColor: '#2A2322', borderRadius: 50, width: 15, height: 15, left: 0 }} />
               <Text style={{ marginLeft: 10, bottom: Platform.select({ ios: 0, android: 3 }), fontSize: Platform.select({ ios: 14, android: 13 }), fontWeight: 'bold' }}>첫 번째 익명의 메시지</Text>
@@ -149,6 +177,7 @@ function DetailMessage({ route }) {
               </View>
             </View>
           </View>
+          <View style={{ height: 90 }} />
         </ScrollView>
       </View>
       <Pressable
@@ -161,7 +190,17 @@ function DetailMessage({ route }) {
             screen: 'PushScreen',
             animation: 'fade'
           });
-        }} style={{ borderRadius: 50, width: 40, height: 40, position: 'absolute', bottom: 40, right: 40, backgroundColor: '#000000' }}></Pressable>
+        }} style={{ justifyContent: 'center', alignItems: 'center', borderRadius: 50, width: 64, height: 64, position: 'absolute', bottom: 40, right: 40, backgroundColor: '#FBF9F4', borderWidth: 0.5, borderColor: '#000000' }}>
+        <SvgIcon
+          name='haewoosoLogo'
+          fill='#000000'
+          stroke='#ffffff'
+          strokeWidth='1.5'
+          size={30}
+          style={{ zIndex: 100 }}
+        />
+        <Text style={{ fontSize: Platform.select({ ios: 11, android: 10 }), marginTop: 3 }}>(5/5)</Text>
+      </Pressable>
     </View >
   );
 }

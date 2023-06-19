@@ -128,16 +128,17 @@ const OnboardingScreen = () => {
         duration={500}
         onAnimationEnd={() => onAnimationHandle()}
         iterationDelay={calcDelay(5)}
-        style={{ position: 'absolute', fontSize: Platform.select({ ios: 14, android: 12 }) }}
+        style={{ position: 'absolute' }}
         useNativeDriver={true}
       >
         <SvgIcon
           name='haewoosoLogo'
+          fill='#000000'
           stroke='#797979'
           strokeWidth='1.5'
           size={40}
         />
-        <Text style={{ textAlign: 'center', marginTop: 10 }}>touch!</Text>
+        <Text style={{ textAlign: 'center', marginTop: 10, fontSize: Platform.select({ ios: 14, android: 12 }) }}>touch!</Text>
       </Animatable.View> :
         <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" useNativeDriver={true}>
           <Pressable
@@ -160,6 +161,7 @@ const OnboardingScreen = () => {
           >
             <SvgIcon
               name='haewoosoLogo'
+              fill='#000000'
               stroke='#797979'
               strokeWidth='1.5'
               size={40}

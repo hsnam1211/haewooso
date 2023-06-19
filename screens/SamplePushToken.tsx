@@ -29,6 +29,7 @@ function SamplePushToken() {
   }, [])
 
   const copyToClipboard = () => {
+    console.log(copiedText)
     Clipboard.setString(copiedText);
   };
 

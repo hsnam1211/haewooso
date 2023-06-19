@@ -5,10 +5,11 @@ import { View, Text, useColorScheme, Platform, Pressable, Image } from 'react-na
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useRecoilState } from 'recoil';
 import DeviceInfo from 'react-native-device-info';
-import Main from '../screens/Main';
 import Sample from '../screens/Sample';
 import SvgIcon from '../src/components/SvgIcon';
 import SamplePushToken from '../screens/SamplePushToken';
+import StickyHeaderExample from '../screens/StickyHeaderExample';
+import Main from '../screens/Main';
 
 const Tab = createBottomTabNavigator();
 
