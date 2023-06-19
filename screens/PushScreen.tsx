@@ -31,8 +31,8 @@ function PushScreen() {
   const [receiveCheck, setReceiveCheck] = useState(true)
   const [mainCheck, setMainCheck] = useState(true)
   const [description, setDescription] = useState('');
-  const maxLength = 300;
-  const maxLines = 12;
+  const maxLength = 100;
+  const maxLines = 10;
 
   const isEmptyDescription = (text) => {
     return !(!text || text.trim().length === 0)
@@ -100,7 +100,6 @@ function PushScreen() {
       />)
   }
 
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.select({ ios: undefined, android: undefined })}
@@ -112,22 +111,33 @@ function PushScreen() {
               paddingLeft: 5,
               paddingRight: 5,
               paddingBottom: 14,
+              paddingTop: 24,
               width: width - 40,
               fontSize: Platform.select({ ios: 14, android: 13 }),
               marginTop: 7,
               marginBottom: 7,
-              paddingTop: 24,
               textAlignVertical: 'center',
               borderBottomColor: '#2A2322',
               borderBottomWidth: 0.5,
               lineHeight: 25,
             }}
             value={description}
+            maxLength={100}
             // onChangeText={text => setDescription(text)}
             onChangeText={handleTextChange}
             placeholder={!isEmptyDescription(description) ? '근심을 털어놓아보세요. 익명의 누군가에게 전달됩니다.' : ''}
             multiline={true}
-          // onSubmitEditing={handlePress}
+            // onSubmitEditing={handlePress}
+            onContentSizeChange={e => {
+              if (Platform.OS === 'ios') {
+
+                console.log(e.nativeEvent.contentSize.height / 25) // prints number of lines
+              } else {
+
+                console.log(e.nativeEvent.contentSize.height / 26)
+              }
+            }
+            }
           />
           <Text>{`${description.length}/${maxLength}`}</Text>
           {isEmptyDescription(description) &&

@@ -122,6 +122,7 @@ function DetailMessage({ route }) {
             borderBottomColor: '#2A2322',
             borderBottomWidth: 0.5,
             marginTop: Platform.select({ ios: 0, android: 0 }),
+
             // marginBottom: Platform.select({ ios: 30, android: 30 })
           }}>
             <Text
