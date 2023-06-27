@@ -65,5 +65,5 @@ export const gaSetUserState = atom({
 
 export const getMessageState = atom({
     key: 'getMessageState', // unique ID (with respect to other atoms/selectors)
-    default: null, // default value (aka initial value)
+    default: false, // default value (aka initial value)
 });

@@ -66,7 +66,9 @@ function PushScreen() {
       title: truncateDescription(description),
       description: description,
       // sender: await Storage.getItem('uuid'),
-      sender_uuid: "550e8400-e29b-41d4-a716-446655440000"
+      sender_uuid: "550e8400-e29b-41d4-a716-446655440000",
+      // main_view_yn: mainCheck,
+      // reply_yn: receiveCheck
     })
       .then(response => {
         // 성공적으로 요청을 처리한 경우

@@ -14,6 +14,8 @@ import SvgIcon from '../src/components/SvgIcon';
 import { taptic } from '../src/util/taptic';
 import { useNavigation } from '@react-navigation/native';
 import ArrowClick from '../assets/arrowClick.png';
+import Toast from 'react-native-toast-message';
+import { useRecoilState } from 'recoil';
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -23,7 +25,7 @@ const Container = styled(View)`
 function Main() {
   const navigation = useNavigation()
   const [message, setMessage] = useState(undefined)
-  // const [msgData, setMsgData] = useRecoilState(getMessageState)
+  const [msgData, setMsgData] = useRecoilState(getMessageState)
 
   const data = [
     { title: 'pass', data: [{ id: 1 }] },
@@ -50,6 +52,16 @@ function Main() {
       ]
     },
   ];
+
+  const ToastHandle = (text, type) => {
+    Toast.show({
+      type: 'tomatoToast',
+      position: 'top',
+      // bottomOffset: 100,
+      visibilityTime: 4000,
+      text1: text,
+    });
+  };
 
   const appState = useRef(AppState.currentState);
 
@@ -93,18 +105,20 @@ function Main() {
   useEffect(() => {
     const subscribeToMessages = messaging().onMessage(
       async (remoteMessage) => {
-        alert('fore ground')
         console.log('Main subscribeToMessages', remoteMessage)
+        ToastHandle(remoteMessage?.notification?.body, 'info');
+        // alert(remoteMessage?.notification?.body)
         setMessage({
           body: remoteMessage?.notification?.body,
           title: remoteMessage?.notification?.title
         })
+        setMsgData(true)
+
       }
     );
 
     return () => subscribeToMessages();
   }, [])
-
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -139,6 +153,7 @@ function Main() {
       </View>
     )
   }
+
   const renderSectionHeader = ({ section }) => {
     if (section.title !== 'pass') {
       return (<View>
@@ -151,7 +166,7 @@ function Main() {
           <View style={{ flexDirection: 'row' }}>
             <View style={{ position: 'relative' }}>
               <View style={{
-                backgroundColor: '#413d34',
+                backgroundColor: message?.title ? '#413d34' : 'transparent',
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 15,
@@ -217,6 +232,7 @@ function Main() {
   }
 
   const MidSection = () => {
+    const [number, setNumber] = useState(5)
     return (
       <>
         <View style={{
@@ -246,6 +262,7 @@ function Main() {
             }}
             onPressIn={() => {
               taptic()
+              setNumber((p) => p - 1)
             }}
             onPressOut={() => {
               taptic()
@@ -256,7 +273,7 @@ function Main() {
             }}
           >
             <Text style={{ color: 'rgba(60, 50, 48, 0.6)', textAlign: 'center', paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }}>
-              💩 메시지 보내기 (5/5)
+              💩 메시지 보내기 ({number}/5)
             </Text>
           </Pressable>
           <View
@@ -378,14 +395,6 @@ function Main() {
       }}
     >
       <Container>
-        {message?.title &&
-          <Animated.View style={{ zIndex: 100000, alignItems: 'center', backgroundColor: 'transparent', }}>
-            <Pressable onPress={() => { setMessage(undefined) }} style={{ borderBottomRightRadius: 6, borderBottomLeftRadius: 6, padding: 20, width: width, backgroundColor: 'gray' }}>
-              <Text style={{ color: '#fff' }}>{message?.title}</Text>
-              <Text style={{ color: '#fff' }}>{message?.body}</Text>
-              <Text>확인 되었으면 클릭!</Text>
-            </Pressable>
-          </Animated.View>}
         <MainFlatList />
       </Container>
     </View>

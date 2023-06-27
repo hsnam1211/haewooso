@@ -16,6 +16,9 @@ import notifee from '@notifee/react-native';
 import { RecoilRoot } from 'recoil';
 import { v4 as uuidv4 } from "uuid";
 import { Storage } from './src/util/storage';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './src/util/toastMsg';
+
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -132,10 +135,13 @@ export default function App() {
   if (Platform.OS === 'ios') StatusBar.setBarStyle('dark-content', true);
 
   return (
-    <RecoilRoot>
-      <NavigationContainer>
-        <Root />
-      </NavigationContainer>
-    </RecoilRoot>
+    <>
+      <RecoilRoot>
+        <NavigationContainer>
+          <Root />
+        </NavigationContainer>
+      </RecoilRoot>
+      <Toast config={toastConfig} />
+    </>
   );
 }
