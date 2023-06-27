@@ -53,6 +53,7 @@ async function onDisplayNotification({ title = '', body = '' }) {
 async function getFcmToken() {
   try {
     let platform = Platform.OS
+    // console.log platform / token
     console.log({ platform }, await messaging().getToken());
     const storedToken = await Storage.getItem('fcmToken');
     if (!storedToken) {

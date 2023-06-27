@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 
-import { View, Text, Pressable, AppState, AppStateStatus, FlatList, Platform, Animated, VirtualizedList, SectionList } from 'react-native';
+import { View, Text, Pressable, AppState, Image, AppStateStatus, FlatList, Platform, Animated, VirtualizedList, SectionList } from 'react-native';
 import styled from 'styled-components';
 import { Storage } from '../src/util/storage'
 import { getMessageState } from '../src/recoil/atoms';
@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import SvgIcon from '../src/components/SvgIcon';
 import { taptic } from '../src/util/taptic';
 import { useNavigation } from '@react-navigation/native';
+import ArrowClick from '../assets/arrowClick.png';
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -31,13 +32,8 @@ function Main() {
       data: [
         {
           title: '유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ',
-          description: `유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
-        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
-        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
-        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
-        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
-        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ
-        유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 ㅋㅋ` },
+          description: `유튜브 조회수가 너무 안나와.. 잘 되는 방법 좀 알려줘`
+        },
         { title: 'asdasd', description: '리 자야' },
         {
           title: '벌써 4시다.. ', description: `내일 할 거 : 
@@ -148,20 +144,45 @@ function Main() {
       return (<View>
         <View style={{
           paddingLeft: 16,
-          paddingTop: Platform.OS === 'ios' ? 8 : 11,
-          paddingBottom: Platform.OS === 'ios' ? 8 : 6,
+          paddingTop: Platform.OS === 'ios' ? 13 : 13,
           backgroundColor: '#FBF9F4',
         }}
         >
           <View style={{ flexDirection: 'row' }}>
-            <View>
-              <SvgIcon
-                name='haewoosoLogo'
-                stroke='#797979'
-                strokeWidth='1.5'
-                fill='#000000'
-                size={40}
-              />
+            <View style={{ position: 'relative' }}>
+              <View style={{
+                backgroundColor: '#413d34',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 15,
+                height: 15,
+                borderRadius: 50,
+                right: -30,
+                top: -6
+              }}>
+                <Text style={{ color: '#FBF9F4', bottom: Platform.select({ ios: 0, android: 2 }), fontSize: Platform.select({ ios: 14, android: 12 }) }}>!</Text>
+              </View>
+              <Pressable
+                style={{ top: -15 }}
+                onPressIn={() => {
+                  taptic()
+                }}
+                onPressOut={() => {
+                  taptic()
+                  navigation.navigate('StackModal', {
+                    screen: 'PushScreen',
+                    animation: 'fade'
+                  });
+                }}
+              >
+                <SvgIcon
+                  name='haewoosoLogo'
+                  stroke='#797979'
+                  strokeWidth='1.5'
+                  fill='#000000'
+                  size={40}
+                />
+              </Pressable>
             </View>
             <Text
               style={{
@@ -235,13 +256,22 @@ function Main() {
             }}
           >
             <Text style={{ color: 'rgba(60, 50, 48, 0.6)', textAlign: 'center', paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }}>
-              💩 근심 보내기 (5/5)
+              💩 메시지 보내기 (5/5)
             </Text>
           </Pressable>
+          <View
+            style={{ position: 'absolute', right: 64, top: Platform.select({ ios: 13, android: 9 }), flexDirection: 'row' }}
+          >
+            <Image
+              style={{ transform: [{ rotate: '200deg' }], width: 17, height: 17, top: Platform.select({ ios: 2, android: 4 }) }}
+              source={ArrowClick}
+            />
+            <Text style={{ marginLeft: 4, transform: [{ rotate: '10deg' }], fontSize: Platform.select({ ios: 13, android: 12 }) }}>click!</Text>
+          </View>
         </View>
         <View style={{ marginTop: 5, marginBottom: 10 }}>
           <Text style={{ fontWeight: 'bold', fontSize: 13 }}>
-            공개 된 근심
+            공개 된 메시지
           </Text>
         </View>
       </>

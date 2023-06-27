@@ -10,6 +10,7 @@ import SvgIcon from '../src/components/SvgIcon';
 import SamplePushToken from '../screens/SamplePushToken';
 import StickyHeaderExample from '../screens/StickyHeaderExample';
 import Main from '../screens/Main';
+import Setting from '../screens/Setting';
 
 const Tab = createBottomTabNavigator();
 
@@ -100,6 +101,36 @@ function Tabs() {
           headerTitleStyle: {
             // color: BLACK_COLOR,
             color: '#F9F5EB',
+            fontSize: 20,
+            fontWeight: '500',
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
+        }}
+      />
+      <Tab.Screen
+        name='MY'
+        component={Setting}
+        options={{
+          tabBarLabel: 'MY',
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <SvgIcon
+                name='heart'
+                stroke={focused ? '#FBF9F4' : '#797979'}
+                strokeWidth={focused ? 2 : 1.5}
+                size={24}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: '#FBF9F4',
+
+          },
+          headerTitleStyle: {
+            // color: BLACK_COLOR,
+            color: '#413d34',
             fontSize: 20,
             fontWeight: '500',
           },

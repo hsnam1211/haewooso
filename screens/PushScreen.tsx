@@ -26,6 +26,7 @@ import { height, width } from '../src/util/screenDimensions';
 import axios from 'axios';
 import { taptic } from '../src/util/taptic';
 import CheckBox from '@react-native-community/checkbox';
+import { Storage } from '../src/util/storage';
 
 function PushScreen() {
   const [receiveCheck, setReceiveCheck] = useState(true)
@@ -56,12 +57,16 @@ function PushScreen() {
     return text.split('\n').length;
   };
 
-  const handlePress = () => {
+
+
+  const handlePress = async () => {
+    // console.log(await Storage.getItem('uuid'))
     // axios 호출
     axios.post('http://15.165.155.62:8080/v1/push', {
       title: truncateDescription(description),
       description: description,
-      sender: 'uuid'
+      // sender: await Storage.getItem('uuid'),
+      sender_uuid: "550e8400-e29b-41d4-a716-446655440000"
     })
       .then(response => {
         // 성공적으로 요청을 처리한 경우
@@ -127,17 +132,17 @@ function PushScreen() {
             onChangeText={handleTextChange}
             placeholder={!isEmptyDescription(description) ? '근심을 털어놓아보세요. 익명의 누군가에게 전달됩니다.' : ''}
             multiline={true}
-            // onSubmitEditing={handlePress}
-            onContentSizeChange={e => {
-              if (Platform.OS === 'ios') {
+          // onSubmitEditing={handlePress}
+          // onContentSizeChange={e => {
+          //   if (Platform.OS === 'ios') {
 
-                console.log(e.nativeEvent.contentSize.height / 25) // prints number of lines
-              } else {
+          //     console.log(e.nativeEvent.contentSize.height / 25) // prints number of lines
+          //   } else {
 
-                console.log(e.nativeEvent.contentSize.height / 26)
-              }
-            }
-            }
+          //     console.log(e.nativeEvent.contentSize.height / 26)
+          //   }
+          // }
+          // }
           />
           <Text style={{ width: '100%', textAlign: 'right', color: 'gray' }}>{`${description.length}/${maxLength}`}</Text>
           {isEmptyDescription(description) &&
@@ -159,7 +164,7 @@ function PushScreen() {
                   }}
                   onPressOut={() => {
                     taptic()
-                    // handlePress()
+                    handlePress()
                   }}
                 >
                   <SvgIcon
