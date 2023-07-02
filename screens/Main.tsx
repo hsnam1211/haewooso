@@ -428,15 +428,6 @@ function Main() {
       useNativeDriver: false,
       listener: (event) => {
         const currentScrollY = event.nativeEvent.contentOffset.y;
-        // scrollY.setValue(currentScrollY);
-
-        // 전체 스크롤을 같이 올립니다.
-        // if (flatListRef.current) {
-        //   flatListRef.current.scrollToOffset({
-        //     offset: currentScrollY, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-        //     animated: true,
-        //   });
-        // }
       },
     }
   );
@@ -464,72 +455,31 @@ function Main() {
     }).start();
   };
 
-  const [isMomentumScroll, setIsMomentumScroll] = useState(false);
-  const onMomentumScrollEnd = () => {
-    setIsMomentumScroll(true);
-  };
-
   const onScrollEndDrag = (event) => {
-    if (isMomentumScroll) {
-      setIsMomentumScroll(false); // 상태를 다시 초기화합니다.
-      return; // onMomentumScrollEnd 이벤트가 발생한 경우 이벤트 실행을 건너뜁니다.
-    }
-
-    // 원래의 onScrollEndDrag 이벤트 처리 코드
-    const currentScrollY = event.nativeEvent.contentOffset.y;
-
-    if (currentScrollY <= 55) {
-      // 100 이하일 때 원하는 처리 작업을 여기에 추가하세요
-      setTimeout(() => {
-        animateScroll(scrollY, 0, 500);
-        if (flatListRef.current) {
-          flatListRef.current.scrollToOffset({
-            offset: 0, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-            animated: true,
-          });
-        }
-      }, 200)
-
-    } else if (currentScrollY > 55 && currentScrollY <= 110) {
-      // 100 이상일 때 원하는 처리 작업을 여기에 추가하세요
-      setTimeout(() => {
-        animateScroll(scrollY, 110, 500);
-        if (flatListRef.current) {
-          flatListRef.current.scrollToOffset({
-            offset: 110, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-            animated: true,
-          });
-        }
-      }, 200)
-    }
-  };
-
-
-  const onScrollEndDrag1 = (event) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
     if (currentScrollY <= 55) {
+      console.log('hi')
       // 100 이하일 때 원하는 처리 작업을 여기에 추가하세요
-      setTimeout(() => {
-        animateScroll(scrollY, 0, 500);
-        if (flatListRef.current) {
-          flatListRef.current.scrollToOffset({
-            offset: 0, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-            animated: true,
-          });
-        }
-      }, 200)
-
+      animateScroll(scrollY, 0, 500);
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({
+          offset: 0, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
+          animated: true,
+        });
+      }
     } else if (currentScrollY > 55 && currentScrollY <= 110) {
+      console.log('!')
       // 100 이상일 때 원하는 처리 작업을 여기에 추가하세요
-      setTimeout(() => {
-        animateScroll(scrollY, 110, 500);
-        if (flatListRef.current) {
-          flatListRef.current.scrollToOffset({
-            offset: 110, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-            animated: true,
-          });
-        }
-      }, 200)
+      animateScroll(scrollY, 110, 500);
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({
+          offset: 110, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
+          animated: true,
+        });
+      }
+    } else {
+      console.log('?')
+      return;
     }
   };
 
@@ -576,7 +526,6 @@ function Main() {
             showsVerticalScrollIndicator={false}
             onScroll={handleScroll}
             onScrollEndDrag={onScrollEndDrag}
-            onMomentumScrollEnd={onMomentumScrollEnd}
             scrollEventThrottle={5}
             extraData={data}
           />
