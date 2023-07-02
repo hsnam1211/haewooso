@@ -28,8 +28,10 @@ import { taptic } from '../src/util/taptic';
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import { getMessageState } from '../src/recoil/atoms';
 
 function Setting({ route }) {
+  const [msgData, setMsgData] = useRecoilState(getMessageState)
   const data = route.params
   const navigation = useNavigation()
 
@@ -99,14 +101,14 @@ function Setting({ route }) {
       style={{ flex: 1, backgroundColor: '#FBF9F4', paddingLeft: 12 }}>
       <View style={{ marginTop: 30, marginBottom: 10 }}>
         <Text style={{ fontWeight: 'bold', fontSize: 13 }}>
-          공개 된 메시지
+          내 메시지
         </Text>
       </View>
       <View style={{ width: width, flexDirection: 'row' }}>
         <View style={{ height: 100, width: (width - 26) / 2, borderRadius: 4, borderWidth: 0.5, borderColor: '#413d34', justifyContent: 'center', alignItems: 'center', marginRight: 2 }}>
           <View style={{
             position: 'absolute',
-            backgroundColor: '#413d34',
+            backgroundColor: msgData ? '#413d34' : 'transparent',
             justifyContent: 'center',
             alignItems: 'center',
             width: 15,
