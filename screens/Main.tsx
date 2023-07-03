@@ -109,6 +109,8 @@ function Main() {
 
   const handlePress = () => {
     taptic();
+    Toast.hide();
+    setMsgData(false);
     navigation.navigate("StackModal", {
       screen: "PushScreen",
       animation: "fade",
@@ -323,7 +325,6 @@ function Main() {
             }}
             onPressIn={() => {
               taptic()
-              setNumber((p) => p - 1)
             }}
             onPressOut={() => {
               taptic()
@@ -331,6 +332,7 @@ function Main() {
                 screen: 'PushScreen',
                 animation: 'fade'
               });
+              setNumber((p) => p - 1)
             }}
           >
             <Text style={{ color: 'rgba(60, 50, 48, 0.6)', textAlign: 'center', paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }}>
@@ -525,7 +527,7 @@ function Main() {
             keyExtractor={(item, index) => item.title + index}
             showsVerticalScrollIndicator={false}
             onScroll={handleScroll}
-            onScrollEndDrag={onScrollEndDrag}
+            // onScrollEndDrag={onScrollEndDrag}
             scrollEventThrottle={5}
             extraData={data}
           />

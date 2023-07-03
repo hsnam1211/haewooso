@@ -13,6 +13,7 @@ import {
   Animated,
   TextInput,
   TouchableWithoutFeedback,
+  StyleSheet,
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native';
@@ -105,29 +106,43 @@ function Setting({ route }) {
         </Text>
       </View>
       <View style={{ width: width, flexDirection: 'row' }}>
-        <View style={{ height: 100, width: (width - 26) / 2, borderRadius: 4, borderWidth: 0.5, borderColor: '#413d34', justifyContent: 'center', alignItems: 'center', marginRight: 2 }}>
-          <View style={{
-            position: 'absolute',
-            backgroundColor: msgData ? '#413d34' : 'transparent',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 15,
-            height: 15,
-            borderRadius: 50,
-            right: 32,
-            top: 28
-          }}>
+        <Pressable
+          style={[styles.messageBox, { marginRight: 2 }]}
+          onPressIn={() => {
+            taptic()
+          }}
+          onPressOut={() => {
+            taptic()
+            navigation.navigate('StackModal', {
+              screen: 'PushScreen',
+              animation: 'fade'
+            });
+          }}
+        >
+          <View style={[styles.receiveMessage, { backgroundColor: msgData ? '#413d34' : 'transparent', }]}>
             <Text style={{ color: '#FBF9F4', bottom: Platform.select({ ios: 0, android: 2 }), fontSize: Platform.select({ ios: 14, android: 12 }) }}>!</Text>
           </View>
           <Text style={{ fontSize: Platform.select({ ios: 14, android: 13 }) }}>
             받은 메시지 보기
           </Text>
-        </View>
-        <View style={{ width: (width - 26) / 2, borderRadius: 4, borderWidth: 0.5, borderColor: '#413d34', alignItems: 'center', marginLeft: 2, justifyContent: 'center', }}>
+        </Pressable>
+        <Pressable
+          style={[styles.messageBox, { marginLeft: 2 }]}
+          onPressIn={() => {
+            taptic()
+          }}
+          onPressOut={() => {
+            taptic()
+            navigation.navigate('StackModal', {
+              screen: 'PushScreen',
+              animation: 'fade'
+            });
+          }}
+        >
           <Text style={{ fontSize: Platform.select({ ios: 14, android: 13 }) }}>
             보낸 메시지 보기
           </Text>
-        </View>
+        </Pressable>
       </View>
 
       <View style={{ marginTop: 30, marginBottom: Platform.select({ ios: 10, android: 3 }) }}>
@@ -145,5 +160,27 @@ function Setting({ route }) {
 
   );
 }
+
+const styles = StyleSheet.create({
+  receiveMessage: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 15,
+    height: 15,
+    borderRadius: 50,
+    right: 32,
+    top: 28
+  },
+  messageBox: {
+    height: 100,
+    width: (width - 26) / 2,
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: '#413d34',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default Setting;

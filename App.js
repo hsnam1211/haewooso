@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Storage } from './src/util/storage';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/util/toastMsg';
+import axios from 'axios';
 
 
 async function requestUserPermission() {
@@ -35,23 +36,26 @@ async function getUUID() {
   const uuid = await Storage.getItem('uuid');
   if (!uuid) {
     await Storage.setItem('uuid', uuidv4());
+  } else {
+    // uuid가 있으면 접속일자 업데이트
+    updateDate(uuid)
   }
 }
 
-async function onDisplayNotification({ title = '', body = '' }) {
-  const channelId = await notifee.createChannel({
-    id: 'channelId',
-    name: 'channelName',
-  });
+// async function onDisplayNotification({ title = '', body = '' }) {
+//   const channelId = await notifee.createChannel({
+//     id: 'channelId',
+//     name: 'channelName',
+//   });
 
-  await notifee.displayNotification({
-    title,
-    body,
-    android: {
-      channelId,
-    },
-  });
-}
+//   await notifee.displayNotification({
+//     title,
+//     body,
+//     android: {
+//       channelId,
+//     },
+//   });
+// }
 
 async function getFcmToken() {
   try {
@@ -84,9 +88,33 @@ async function getFcmToken() {
   }
 }
 
+const updateDate = async (uuid) => {
+  axios.post('http://15.165.155.62:8080/v1/main', {
+    uuid: uuid
+  }).then(response => {
+    console.log(response.data)
+  })
+}
+
+const userAdd = async (uuid, fcmToken) => {
+  axios.post('http://15.165.155.62:8080/v1/adduser', {
+    uuid: uuid,
+    push_token: fcmToken,
+  })
+    .then(response => {
+      // 성공적으로 요청을 처리한 경우
+      console.log(response.data);
+      updateDate(uuid);
+    })
+    .catch(error => {
+      // 요청 처리 중에 오류가 발생한 경우
+      console.error(error);
+    });
+};
 
 async function saveUUIDAndTokenToServer(uuid, fcmToken) {
   // 서버에 UUID와 FCM 토큰을 저장하는 API 호출
+  await userAdd(uuid, fcmToken)
   console.log('Saving UUID and FCM Token to server:', uuid, fcmToken);
   // 실패 시 
   // await Storage.setItem('fcmToken', undefined);
