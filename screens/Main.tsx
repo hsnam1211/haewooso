@@ -111,9 +111,8 @@ function Main() {
     taptic();
     Toast.hide();
     setMsgData(false);
-    navigation.navigate("StackModal", {
-      screen: "PushScreen",
-      animation: "fade",
+    navigation.navigate('StackCard', {
+      screen: 'ReceiveMsg'
     });
   };
 
@@ -250,9 +249,8 @@ function Main() {
               onPressOut={() => {
                 taptic()
                 setMsgData(false)
-                navigation.navigate("StackModal", {
-                  screen: "PushScreen",
-                  animation: "fade",
+                navigation.navigate('StackCard', {
+                  screen: 'ReceiveMsg'
                 });
               }}
             >

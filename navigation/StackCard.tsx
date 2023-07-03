@@ -10,6 +10,7 @@ import {
 import { useRecoilState } from 'recoil';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import DetailMessage from '../screens/DetailMessage';
+import ReceiveMsg from '../screens/ReceiveMsg';
 
 
 const NativeStack = createNativeStackNavigator();
@@ -34,6 +35,15 @@ const StackCard = () => {
       <NativeStack.Screen
         name="DetailMessage"
         component={DetailMessage}
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+          animation: 'default'
+        }}
+      />
+      <NativeStack.Screen
+        name="ReceiveMsg"
+        component={ReceiveMsg}
         options={{
           headerShown: false,
           gestureEnabled: false,

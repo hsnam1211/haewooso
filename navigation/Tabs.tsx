@@ -81,35 +81,6 @@ function Tabs() {
       // }}
       />
       <Tab.Screen
-        name='SamplePushToken'
-        component={SamplePushToken}
-        options={{
-          tabBarLabel: 'SamplePushToken',
-          tabBarIcon: ({ focused, color, size }) => {
-            return (
-              <SvgIcon
-                name='heart'
-                stroke={focused ? '#FBF9F4' : '#797979'}
-                strokeWidth={focused ? 2 : 1.5}
-                size={24}
-              />
-            );
-          },
-          headerStyle: {
-            backgroundColor: '#2A2322',
-          },
-          headerTitleStyle: {
-            // color: BLACK_COLOR,
-            color: '#F9F5EB',
-            fontSize: 20,
-            fontWeight: '500',
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-          },
-        }}
-      />
-      <Tab.Screen
         name='MY'
         component={Setting}
         options={{
@@ -131,6 +102,35 @@ function Tabs() {
           headerTitleStyle: {
             // color: BLACK_COLOR,
             color: '#413d34',
+            fontSize: 20,
+            fontWeight: '500',
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
+        }}
+      />
+      <Tab.Screen
+        name='SamplePushToken'
+        component={SamplePushToken}
+        options={{
+          tabBarLabel: 'SamplePushToken',
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <SvgIcon
+                name='heart'
+                stroke={focused ? '#FBF9F4' : '#797979'}
+                strokeWidth={focused ? 2 : 1.5}
+                size={24}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: '#2A2322',
+          },
+          headerTitleStyle: {
+            // color: BLACK_COLOR,
+            color: '#F9F5EB',
             fontSize: 20,
             fontWeight: '500',
           },

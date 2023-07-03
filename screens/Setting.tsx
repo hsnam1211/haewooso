@@ -113,8 +113,8 @@ function Setting({ route }) {
           }}
           onPressOut={() => {
             taptic()
-            navigation.navigate('StackModal', {
-              screen: 'PushScreen',
+            navigation.navigate('StackCard', {
+              screen: 'ReceiveMsg',
               animation: 'fade'
             });
           }}
