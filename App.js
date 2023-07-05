@@ -92,7 +92,7 @@ const updateDate = async (uuid) => {
   axios.post('http://15.165.155.62:8080/v1/main', {
     uuid: uuid
   }).then(response => {
-    console.log(response.data)
+    console.log('updateDate', response.data)
   })
 }
 
@@ -103,7 +103,7 @@ const userAdd = async (uuid, fcmToken) => {
   })
     .then(response => {
       // 성공적으로 요청을 처리한 경우
-      console.log(response.data);
+      console.log('userAdd', response.data);
       updateDate(uuid);
     })
     .catch(error => {

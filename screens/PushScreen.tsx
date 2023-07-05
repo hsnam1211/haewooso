@@ -27,8 +27,11 @@ import axios from 'axios';
 import { taptic } from '../src/util/taptic';
 import CheckBox from '@react-native-community/checkbox';
 import { Storage } from '../src/util/storage';
+import CommonModal from '../src/components/CommonModal';
+import { useNavigation } from '@react-navigation/native';
 
 function PushScreen() {
+  const navigation = useNavigation();
   const [receiveCheck, setReceiveCheck] = useState(true)
   const [mainCheck, setMainCheck] = useState(true)
   const [description, setDescription] = useState('');
@@ -57,22 +60,21 @@ function PushScreen() {
     return text.split('\n').length;
   };
 
-
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handlePress = async () => {
-    // console.log(await Storage.getItem('uuid'))
     // axios 호출
     axios.post('http://15.165.155.62:8080/v1/push', {
       title: truncateDescription(description),
       description: description,
-      // sender: await Storage.getItem('uuid'),
-      sender_uuid: "550e8400-e29b-41d4-a716-446655440000",
-      // main_view_yn: mainCheck,
-      // reply_yn: receiveCheck
+      sender_uuid: await Storage.getItem('uuid'),
+      main_view_yn: mainCheck ? 'Y' : 'N',
+      reply_yn: receiveCheck ? 'Y' : 'N'
     })
       .then(response => {
         // 성공적으로 요청을 처리한 경우
         console.log(response.data);
+        navigation.goBack();
       })
       .catch(error => {
         // 요청 처리 중에 오류가 발생한 경우
@@ -108,80 +110,94 @@ function PushScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.select({ ios: undefined, android: undefined })}
-      style={{ flex: 1, }}>
-      <TouchableWithoutFeedback onPress={dismissKeyboard}>
-        <View style={{ backgroundColor: '#FBF9F4', flex: 1, paddingTop: 70, alignItems: 'center', paddingRight: 30, paddingLeft: 30 }}>
-          <TextInput
-            style={{
-              paddingLeft: 5,
-              paddingRight: 5,
-              paddingBottom: 14,
-              paddingTop: 24,
-              width: width - 40,
-              fontSize: Platform.select({ ios: 14, android: 13 }),
-              marginTop: 7,
-              marginBottom: 7,
-              textAlignVertical: 'center',
-              borderBottomColor: '#2A2322',
-              borderBottomWidth: 0.5,
-              lineHeight: 25,
-            }}
-            value={description}
-            maxLength={100}
-            // onChangeText={text => setDescription(text)}
-            onChangeText={handleTextChange}
-            placeholder={!isEmptyDescription(description) ? '근심을 털어놓아보세요. 익명의 누군가에게 전달됩니다.' : ''}
-            multiline={true}
-          // onSubmitEditing={handlePress}
-          // onContentSizeChange={e => {
-          //   if (Platform.OS === 'ios') {
+    <>
+      <CommonModal
+        title="새로 날아온 근심"
+        description="익명의 누군가에게 근심을 전달하시겠습니까?"
+        type="alert"
+        visible={modalVisible}
+        onConfirm={handlePress}
+        onClose={() => {
+          console.log('팝업을 닫았습니다.');
+          setModalVisible(false)
+        }}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.select({ ios: undefined, android: undefined })}
+        style={{ flex: 1, }}>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+          <View style={{ backgroundColor: '#FBF9F4', flex: 1, paddingTop: 70, alignItems: 'center', paddingRight: 30, paddingLeft: 30 }}>
+            <TextInput
+              style={{
+                paddingLeft: 5,
+                paddingRight: 5,
+                paddingBottom: 14,
+                paddingTop: 24,
+                width: width - 40,
+                fontSize: Platform.select({ ios: 14, android: 13 }),
+                marginTop: 7,
+                marginBottom: 7,
+                textAlignVertical: 'center',
+                borderBottomColor: '#2A2322',
+                borderBottomWidth: 0.5,
+                lineHeight: 25,
+              }}
+              value={description}
+              maxLength={100}
+              // onChangeText={text => setDescription(text)}
+              onChangeText={handleTextChange}
+              placeholder={!isEmptyDescription(description) ? '근심을 털어놓아보세요. 익명의 누군가에게 전달됩니다.' : ''}
+              multiline={true}
+            // onSubmitEditing={handlePress}
+            // onContentSizeChange={e => {
+            //   if (Platform.OS === 'ios') {
 
-          //     console.log(e.nativeEvent.contentSize.height / 25) // prints number of lines
-          //   } else {
+            //     console.log(e.nativeEvent.contentSize.height / 25) // prints number of lines
+            //   } else {
 
-          //     console.log(e.nativeEvent.contentSize.height / 26)
-          //   }
-          // }
-          // }
-          />
-          <Text style={{ width: '100%', textAlign: 'right', color: 'gray' }}>{`${description.length}/${maxLength}`}</Text>
-          {isEmptyDescription(description) &&
-            <View style={{ borderWidth: 0.5, borderColor: '#2A2322', borderRadius: 3, padding: 20, flexDirection: 'row', position: 'absolute', bottom: 0, marginBottom: 70, width: width - 40, alignItems: 'center', justifyContent: 'space-between' }}>
-              <View style={{ height: '80%', flexDirection: 'column', justifyContent: 'space-around' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CustomCheckBox checkState={receiveCheck} setCheckState={setReceiveCheck} />
-                  <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>누군가에게 답장을 받고 싶어요.</Text>
+            //     console.log(e.nativeEvent.contentSize.height / 26)
+            //   }
+            // }
+            // }
+            />
+            <Text style={{ width: '100%', textAlign: 'right', color: 'gray' }}>{`${description.length}/${maxLength}`}</Text>
+            {isEmptyDescription(description) &&
+              <View style={{ borderWidth: 0.5, borderColor: '#2A2322', borderRadius: 3, padding: 20, flexDirection: 'row', position: 'absolute', bottom: 0, marginBottom: 70, width: width - 40, alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{ height: '80%', flexDirection: 'column', justifyContent: 'space-around' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CustomCheckBox checkState={receiveCheck} setCheckState={setReceiveCheck} />
+                    <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>누군가에게 답장을 받고 싶어요.</Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CustomCheckBox checkState={mainCheck} setCheckState={setMainCheck} />
+                    <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>메인 화면에 공개할래요.</Text>
+                  </View>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CustomCheckBox checkState={mainCheck} setCheckState={setMainCheck} />
-                  <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>메인 화면에 공개할래요.</Text>
-                </View>
-              </View>
-              <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" useNativeDriver={true} style={{}}>
-                <Pressable
-                  onPressIn={() => {
-                    taptic()
-                  }}
-                  onPressOut={() => {
-                    taptic()
-                    handlePress()
-                  }}
-                >
-                  <SvgIcon
-                    name='haewoosoLogo'
-                    fill='#000000'
-                    stroke='#797979'
-                    strokeWidth='1.5'
-                    size={40}
-                  />
-                  <Text style={{ textAlign: 'center', marginTop: 10 }}>send</Text>
-                </Pressable>
-              </Animatable.View></View>}
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+                <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" useNativeDriver={true} style={{}}>
+                  <Pressable
+                    onPressIn={() => {
+                      taptic()
+                    }}
+                    onPressOut={() => {
+                      taptic()
+                      setModalVisible(true)
+                      // handlePress()
+                    }}
+                  >
+                    <SvgIcon
+                      name='haewoosoLogo'
+                      fill='#000000'
+                      stroke='#797979'
+                      strokeWidth='1.5'
+                      size={40}
+                    />
+                    <Text style={{ textAlign: 'center', marginTop: 10 }}>send</Text>
+                  </Pressable>
+                </Animatable.View></View>}
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 

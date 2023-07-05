@@ -20,6 +20,7 @@ import { useNavigation } from '@react-navigation/native';
 import ArrowClick from '../assets/arrowClick.png';
 import Toast from 'react-native-toast-message';
 import { useRecoilState } from 'recoil';
+import CommonModal from '../src/components/CommonModal';
 
 
 const Container = styled(View)`
@@ -356,8 +357,6 @@ function Main() {
     )
   }
 
-
-
   const renderItem = ({ item, index }) => {
     return (
       <>
@@ -375,7 +374,6 @@ function Main() {
         }}
           onPress={() => {
             taptic()
-            // setType((p) => !p)
             navigation.navigate('StackCard', {
               screen: 'DetailMessage',
               params: item,
@@ -411,17 +409,6 @@ function Main() {
       </>)
   }
 
-  // const handleScroll = Animated.event(
-  //   [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-  //   {
-  //     useNativeDriver: false,
-  //     listener: (event) => {
-  //       scrollY.setValue(event.nativeEvent.contentOffset.y);
-  //       // 여기에 추가로 실행할 코드를 작성하면 됩니다.
-  //     },
-  //   }
-  // );
-
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     {
@@ -445,44 +432,6 @@ function Main() {
     outputRange: [0, 3], // 변화할 값 (0에서 0.3까지)
     extrapolate: 'clamp', // 범위 밖의 값은 clamp하여 최소값과 최대값으로 고정
   });
-
-
-  const animateScroll = (value, toValue, duration) => {
-    Animated.timing(value, {
-      toValue: toValue,
-      duration: duration,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const onScrollEndDrag = (event) => {
-    const currentScrollY = event.nativeEvent.contentOffset.y;
-    if (currentScrollY <= 55) {
-      console.log('hi')
-      // 100 이하일 때 원하는 처리 작업을 여기에 추가하세요
-      animateScroll(scrollY, 0, 500);
-      if (flatListRef.current) {
-        flatListRef.current.scrollToOffset({
-          offset: 0, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-          animated: true,
-        });
-      }
-    } else if (currentScrollY > 55 && currentScrollY <= 110) {
-      console.log('!')
-      // 100 이상일 때 원하는 처리 작업을 여기에 추가하세요
-      animateScroll(scrollY, 110, 500);
-      if (flatListRef.current) {
-        flatListRef.current.scrollToOffset({
-          offset: 110, // 이 부분에서 원하는 만큼 스크롤을 변경할 수 있습니다.
-          animated: true,
-        });
-      }
-    } else {
-      console.log('?')
-      return;
-    }
-  };
-
 
   return (
     <>
@@ -525,7 +474,6 @@ function Main() {
             keyExtractor={(item, index) => item.title + index}
             showsVerticalScrollIndicator={false}
             onScroll={handleScroll}
-            // onScrollEndDrag={onScrollEndDrag}
             scrollEventThrottle={5}
             extraData={data}
           />
@@ -538,7 +486,6 @@ function Main() {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#FBF9F4',
-    // backgroundColor: 'blue',
     position: 'absolute',
     width: width,
     top: 0,

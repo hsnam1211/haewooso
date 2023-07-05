@@ -21,14 +21,14 @@ const StackCard = () => {
       screenOptions={{
         headerBackTitleVisible: true,
         headerTitleAlign: 'center',
-        gestureEnabled: false,
+        gestureEnabled: true,
       }}
     >
       <NativeStack.Screen
         name="Onboarding"
         component={OnboardingScreen}
         options={{
-          gestureEnabled: false,
+          gestureEnabled: true,
           animation: 'default'
         }}
       />
@@ -37,7 +37,7 @@ const StackCard = () => {
         component={DetailMessage}
         options={{
           headerShown: false,
-          gestureEnabled: false,
+          gestureEnabled: true,
           animation: 'default'
         }}
       />
@@ -46,7 +46,7 @@ const StackCard = () => {
         component={ReceiveMsg}
         options={{
           headerShown: false,
-          gestureEnabled: false,
+          gestureEnabled: true,
           animation: 'default'
         }}
       />
