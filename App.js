@@ -19,7 +19,10 @@ import { Storage } from './src/util/storage';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/util/toastMsg';
 import axios from 'axios';
-
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -132,6 +135,7 @@ async function scheduleFCMTokenRefresh() {
 }
 
 export default function App() {
+  const queryClient = new QueryClient()
   useEffect(() => {
     const initialize = async () => {
       if (Platform.OS === 'ios') {
@@ -164,12 +168,14 @@ export default function App() {
 
   return (
     <>
-      <RecoilRoot>
-        <NavigationContainer>
-          <Root />
-        </NavigationContainer>
-      </RecoilRoot>
-      <Toast config={toastConfig} />
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+          <NavigationContainer>
+            <Root />
+          </NavigationContainer>
+        </RecoilRoot>
+        <Toast config={toastConfig} />
+      </QueryClientProvider>
     </>
   );
 }

@@ -98,24 +98,27 @@ function DetailMessage({ route }) {
     <View
       style={{ flex: 1, }}>
       <View style={{ backgroundColor: '#FBF9F4', flex: 1, paddingTop: Platform.select({ ios: 70, android: 30 }), alignItems: 'center', paddingRight: 20, paddingLeft: 20 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 10 }}>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ backgroundColor: '#2A2322', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
-              <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
-                메시지 전송 가능
-              </Text>
+            <View style={{ backgroundColor: data.reply_yn === 'N' ? '#a83f39' : '#2A2322', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+              {data.reply_yn === 'N' ? <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+                전송 불가
+              </Text> :
+                <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+                  메시지 전송 가능
+                </Text>}
             </View>
-            <View style={{ backgroundColor: 'lightgray', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+            {data.reply_yn === 'N' && <View style={{ backgroundColor: 'lightgray', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
               <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#000000' }}>
                 답변 완료
               </Text>
-            </View>
+            </View>}
           </View>
-          <View style={{ backgroundColor: '#575241', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 50 }}>
+          {data.reply_yn === 'Y' && <View style={{ backgroundColor: '#575241', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 50 }}>
             <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
               남은 답변 횟수 : 1/3
             </Text>
-          </View>
+          </View>}
         </View>
         <View style={{ alignItems: 'center' }}>
           <View style={{

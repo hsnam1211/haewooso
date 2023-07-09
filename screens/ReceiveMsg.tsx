@@ -123,25 +123,25 @@ function ReceiveMsg() {
         >
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 10 }}>
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ backgroundColor: '#2A2322', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
-                {type ? <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
+              <View style={{ backgroundColor: item.reply_yn === 'N' ? '#a83f39' : '#2A2322', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+                {item.reply_yn === 'N' ? <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
                   전송 불가
                 </Text> :
                   <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
                     메시지 전송 가능
                   </Text>}
               </View>
-              <View style={{ backgroundColor: 'lightgray', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
+              {item.reply_yn === 'N' && <View style={{ backgroundColor: 'lightgray', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 4 }}>
                 <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#000000' }}>
                   답변 완료
                 </Text>
-              </View>
+              </View>}
             </View>
-            <View style={{ backgroundColor: '#575241', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 50 }}>
+            {item.reply_yn === 'Y' && <View style={{ backgroundColor: '#575241', marginHorizontal: 2, paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 50 }}>
               <Text style={{ fontSize: Platform.select({ ios: 12, android: 11 }), color: '#ffffff' }}>
                 남은 답변 횟수 : 1/3
               </Text>
-            </View>
+            </View>}
           </View>
           <View style={{ borderRadius: 3, backgroundColor: '#ffffff', padding: 10, marginTop: 8 }}>
             <Text style={{ color: '#413d34', fontWeight: 'bold', fontSize: Platform.select({ ios: 14, android: 13 }) }}>{item.description}</Text>
