@@ -67,3 +67,8 @@ export const getMessageState = atom({
     key: 'getMessageState', // unique ID (with respect to other atoms/selectors)
     default: false, // default value (aka initial value)
 });
+
+export const sendMessageCount = atom({
+    key: 'sendMessageCount', // unique ID (with respect to other atoms/selectors)
+    default: 5, // default value (aka initial value)
+});

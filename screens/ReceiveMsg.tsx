@@ -100,9 +100,9 @@ function ReceiveMsg() {
   const renderItem = ({ item, index }) => {
     return (
       <>
-        {index === 0 &&
+        {/* {index === 0 &&
           <MidSection />
-        }
+        } */}
         <Pressable style={{
           padding: 14,
           width: width - 24,
@@ -117,7 +117,7 @@ function ReceiveMsg() {
             // setType((p) => !p)
             navigation.navigate('StackCard', {
               screen: 'DetailMessage',
-              params: item,
+              params: [item, 'target']
             });
           }}
         >
@@ -170,8 +170,8 @@ function ReceiveMsg() {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          paddingTop:
-            Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 52 : 0) : 0,
+          // paddingTop:
+          //   Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 52 : 0) : 0,
           paddingBottom: 20
           // marginBottom:
           //   Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 92 : 70) : 70,

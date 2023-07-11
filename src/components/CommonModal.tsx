@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { width } from '../util/screenDimensions';
 
-function CommonModal({ title, description, type, visible, onClose, onConfirm }) {
+function CommonModal({ title, description, type, visible, onClose, onConfirm, closeText, confirmText }) {
   const [modalVisible, setModalVisible] = useState(visible);
 
   const handlePress = () => {
@@ -77,10 +77,10 @@ function CommonModal({ title, description, type, visible, onClose, onConfirm }) 
             flexDirection: 'row', borderTopWidth: 0.5, borderColor: '#413d34',
           }}>
             <Pressable onPress={handlePress} style={{ padding: 14, width: '50%', alignItems: 'center', borderRightWidth: 0.5, borderColor: '#413d34', }}>
-              <Text>아니요</Text>
+              <Text>{closeText ? closeText : '아니요'}</Text>
             </Pressable>
             <Pressable onPress={handleConfirm} style={{ padding: 14, width: '50%', alignItems: 'center' }}>
-              <Text>네, 전달할래요</Text>
+              <Text>{confirmText ? confirmText : '네, 전달할래요'}</Text>
             </Pressable>
           </View>
         </View>

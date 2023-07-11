@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import { Storage } from '../src/util/storage'
-import { getMessageState } from '../src/recoil/atoms';
+import { getMessageState, sendMessageCount } from '../src/recoil/atoms';
 import messaging from '@react-native-firebase/messaging';
 import { width, height } from '../src/util/screenDimensions';
 import * as Animatable from "react-native-animatable";
@@ -24,7 +24,7 @@ import Toast from 'react-native-toast-message';
 import { useRecoilState } from 'recoil';
 import CommonModal from '../src/components/CommonModal';
 import { useGetMsg } from '../src/api/useApi';
-
+import axios from 'axios';
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -89,7 +89,8 @@ function Main() {
   const navigation = useNavigation()
   const [message, setMessage] = useState(undefined)
   const [msgData, setMsgData] = useRecoilState(getMessageState)
-  const [number, setNumber] = useState(5)
+  const [number, setNumber] = useRecoilState(sendMessageCount)
+
   const [type, setType] = useState(false)
   const [headerExpandedHeight, setHeaderExpandedHeight] = useState(225);
   const [headerCollapsedHeight, setHeaderCollapsedHeight] = useState(110);
@@ -325,11 +326,15 @@ function Main() {
             }}
             onPressOut={() => {
               taptic()
-              navigation.navigate('StackModal', {
-                screen: 'PushScreen',
-                animation: 'fade'
-              });
-              setNumber((p) => p - 1)
+              if (number >= 1) {
+                navigation.navigate('StackModal', {
+                  screen: 'PushScreen',
+                  animation: 'fade'
+                });
+                setNumber((p) => p - 1)
+              } else {
+                adAlert();
+              }
             }}
           >
             <Text style={{ color: 'rgba(60, 50, 48, 0.6)', textAlign: 'center', paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, fontSize: 12, fontWeight: 'bold' }}>
@@ -417,7 +422,6 @@ function Main() {
     }
   );
 
-
   // 스크롤 올라갈 때 shadowOpacity 값 변화
   const shadowOpacityIos = scrollY.interpolate({
     inputRange: [0, 100], // 스크롤 범위 조정 (0에서 200까지)
@@ -448,6 +452,40 @@ function Main() {
     setRefreshing(false);
   }, []);
 
+  // modal control
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const adAlert = () => {
+    setModalVisible(true)
+  }
+
+  // 횟수 0일 때 광고 호출
+  const adHandlePress = async () => {
+    // axios 호출
+    setNumber(5)
+    setModalVisible(false)
+    //   axios.post('http://15.165.155.62:8080/v1/push', {
+    //     title: truncateDescription(description),
+    //     description: description,
+    //     sender_uuid: await Storage.getItem('uuid'),
+    //     main_view_yn: mainCheck ? 'Y' : 'N',
+    //     reply_yn: receiveCheck ? 'Y' : 'N'
+    //   })
+    //     .then(response => {
+    //       // 성공적으로 요청을 처리한 경우
+    //       console.log(response.data);
+    //     })
+    //     .catch(error => {
+    //       // 요청 처리 중에 오류가 발생한 경우
+    //       console.error(error);
+    //     });
+  };
+
+
+  // 로딩 인디케이터의 색상 변경
+  const CustomRefreshControl = (
+    <RefreshControl progressViewOffset={160} refreshing={refreshing} onRefresh={onRefresh} colors={['red']} />
+  );
 
   const loading = mainMsgListLoading;
   return loading ? (
@@ -462,6 +500,19 @@ function Main() {
     </View>
   ) : (
     <>
+      <CommonModal
+        title="새로 날아온 근심"
+        description="더이상 메시지를 보낼 수 없어요. 광고보고 횟수를 채워보세요."
+        type="alert"
+        confirmText="네, 광고보고 올래요"
+        closeText=""
+        visible={modalVisible}
+        onConfirm={adHandlePress}
+        onClose={() => {
+          console.log('팝업을 닫았습니다.');
+          setModalVisible(false)
+        }}
+      />
       <Animated.View
         style={[
           styles.header,
@@ -514,8 +565,10 @@ function Main() {
             onScroll={handleScroll}
             scrollEventThrottle={5}
             extraData={mainMsgList}
-            onRefresh={onRefresh} // Refresh 함수 설정
-            refreshing={refreshing} // 현재 로딩 상태
+            // onRefresh={onRefresh} // Refresh 함수 설정
+            // refreshing={refreshing} // 현재 로딩 상태
+            refreshControl={CustomRefreshControl}
+          // progressViewOffset={180}
           />
         </Container>
       </View>

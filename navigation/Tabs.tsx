@@ -97,10 +97,8 @@ function Tabs() {
           },
           headerStyle: {
             backgroundColor: '#FBF9F4',
-
           },
           headerTitleStyle: {
-            // color: BLACK_COLOR,
             color: '#413d34',
             fontSize: 20,
             fontWeight: '500',

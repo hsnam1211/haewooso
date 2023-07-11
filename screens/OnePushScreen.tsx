@@ -29,13 +29,11 @@ import CheckBox from '@react-native-community/checkbox';
 import { Storage } from '../src/util/storage';
 import CommonModal from '../src/components/CommonModal';
 import { useNavigation } from '@react-navigation/native';
-import { sendMessageCount } from '../src/recoil/atoms';
 
-function PushScreen() {
+function OnePushScreen() {
   const navigation = useNavigation();
   const [receiveCheck, setReceiveCheck] = useState(true)
   const [mainCheck, setMainCheck] = useState(true)
-  const [number, setNumber] = useRecoilState(sendMessageCount)
   const [description, setDescription] = useState('');
   const maxLength = 100;
   const maxLines = 10;
@@ -76,7 +74,6 @@ function PushScreen() {
       .then(response => {
         // 성공적으로 요청을 처리한 경우
         console.log(response.data);
-        setNumber((p) => p - 1)
         navigation.goBack();
       })
       .catch(error => {
@@ -206,4 +203,4 @@ function PushScreen() {
   );
 }
 
-export default PushScreen;
+export default OnePushScreen;

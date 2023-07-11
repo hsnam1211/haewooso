@@ -45,9 +45,18 @@ const StackCard = () => {
         name="ReceiveMsg"
         component={ReceiveMsg}
         options={{
-          headerShown: false,
+          headerTitle: '받은 메시지',
+          headerShown: true,
           gestureEnabled: true,
-          animation: 'default'
+          animation: 'default',
+          headerStyle: {
+            backgroundColor: '#FBF9F4',
+          },
+          headerTitleStyle: {
+            color: '#413d34',
+            fontSize: 20,
+            fontWeight: '500',
+          },
         }}
       />
     </NativeStack.Navigator>
