@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Tabs from './Tabs';
-import StackModal from './StackModal';
-import StackCard from './StackCard';
-import { View } from 'react-native';
-import { useRecoilState } from 'recoil';
-import { getMessageState } from '../src/recoil/atoms';
-import { Storage } from '../src/util/storage'
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Tabs from "./Tabs";
+import StackModal from "./StackModal";
+import StackCard from "./StackCard";
+import { View } from "react-native";
+import { useRecoilState } from "recoil";
+import { getMessageState } from "../src/recoil/atoms";
+import { Storage } from "../src/util/storage";
+import { useNavigation } from "@react-navigation/native";
 
 const Nav = createNativeStackNavigator();
 
 const Root = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   useEffect(() => {
     // 앱이 시작되면서 바로 온보딩 화면으로 이동
@@ -22,33 +22,35 @@ const Root = () => {
   }, []);
 
   const navigateToOnboarding = () => {
-    navigation.navigate('StackCard', {
-      screen: 'Onboarding',
+    navigation.navigate("StackCard", {
+      screen: "Onboarding",
     });
   };
 
-  return (<Nav.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Nav.Screen name='Tabs' component={Tabs} />
+  return (
+    <Nav.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Nav.Screen name="Tabs" component={Tabs} />
 
-    <Nav.Screen
-      name='StackModal'
-      options={{
-        presentation: 'modal',
-      }}
-      component={StackModal}
-    />
-    <Nav.Screen
-      name='StackCard'
-      options={{
-        presentation: 'card',
-      }}
-      component={StackCard}
-    />
-  </Nav.Navigator>)
+      <Nav.Screen
+        name="StackModal"
+        options={{
+          presentation: "modal",
+        }}
+        component={StackModal}
+      />
+      <Nav.Screen
+        name="StackCard"
+        options={{
+          presentation: "card",
+        }}
+        component={StackCard}
+      />
+    </Nav.Navigator>
+  );
 };
 
 export default Root;

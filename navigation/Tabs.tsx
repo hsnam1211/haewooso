@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, useColorScheme, Platform, Pressable, Image } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  View,
+  Text,
+  useColorScheme,
+  Platform,
+  Pressable,
+  Image,
+} from "react-native";
 
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useRecoilState } from 'recoil';
-import DeviceInfo from 'react-native-device-info';
-import Sample from '../screens/Sample';
-import SvgIcon from '../src/components/SvgIcon';
-import SamplePushToken from '../screens/SamplePushToken';
-import StickyHeaderExample from '../screens/StickyHeaderExample';
-import Main from '../screens/Main';
-import Setting from '../screens/Setting';
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { useRecoilState } from "recoil";
+import DeviceInfo from "react-native-device-info";
+import Sample from "../screens/Sample";
+import SvgIcon from "../src/components/SvgIcon";
+import SamplePushToken from "../screens/SamplePushToken";
+import StickyHeaderExample from "../screens/StickyHeaderExample";
+import SimpleMain from "../screens/SimpleMain";
+import Setting from "../screens/Setting";
 
 const Tab = createBottomTabNavigator();
-
 
 function Tabs() {
   return (
@@ -22,45 +28,39 @@ function Tabs() {
         tabBarHideOnKeyboard: true,
         headerShown: true,
         tabBarStyle: {
-          // backgroundColor: 'transparent',
-          // backgroundColor: BLACK_COLOR,
-
-          backgroundColor: '#2A2322',
-          position: 'absolute',
+          backgroundColor: "#2A2322",
+          position: "absolute",
           left: 0,
           bottom: 0,
           right: 0,
           height:
-            Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 92 : 70) : 70,
-          paddingTop: Platform.OS === 'ios' ? 6 : 10,
+            Platform.OS === "ios" ? (DeviceInfo.hasNotch() ? 92 : 70) : 70,
+          paddingTop: Platform.OS === "ios" ? 6 : 10,
           paddingBottom:
-            Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 26 : 12) : 12,
+            Platform.OS === "ios" ? (DeviceInfo.hasNotch() ? 26 : 12) : 12,
         },
-        tabBarActiveTintColor: '#F9F5EB',
+        tabBarActiveTintColor: "#F9F5EB",
         headerStyle: {
           // backgroundColor: '#002B5B',
         },
         headerTitleStyle: {
-          // color: BLACK_COLOR,
-          color: '#F9F5EB',
+          color: "#F9F5EB",
           fontSize: 20,
-          fontWeight: '500',
+          fontWeight: "500",
         },
-        headerTitleAlign: 'center',
+        headerTitleAlign: "center",
       }}
     >
       <Tab.Screen
-        name='해우소'
-        component={Main}
+        name="해우소"
+        component={SimpleMain}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return (
-              <SvgIcon
-                name='Home'
-                stroke={focused ? '#FBF9F4' : '#797979'}
-                strokeWidth={focused ? 2 : 1.5}
-              />
+              <View>
+                <Text>🚽</Text>
+              </View>
             );
           },
           // headerRight: () =>
@@ -71,37 +71,40 @@ function Tabs() {
             fontSize: 12,
           },
           // headerTitle: () => (
-          //   <Image style={{ width: 50, height: 50 }} source={require("./logo.png")} />
+          //   <Image
+          //     style={{ width: 50, height: 50 }}
+          //     source={require("./logo.png")}
+          //   />
           // ),
         }}
-      // listeners={{
-      //   tabPress: (e) => {
-      //     console.log(e);
-      //   },
-      // }}
+        // listeners={{
+        //   tabPress: (e) => {
+        //     console.log(e);
+        //   },
+        // }}
       />
-      <Tab.Screen
-        name='MY'
+      {/* <Tab.Screen
+        name="MY"
         component={Setting}
         options={{
-          tabBarLabel: 'MY',
+          tabBarLabel: "MY",
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <SvgIcon
-                name='heart'
-                stroke={focused ? '#FBF9F4' : '#797979'}
+                name="heart"
+                stroke={focused ? "#FBF9F4" : "#797979"}
                 strokeWidth={focused ? 2 : 1.5}
                 size={24}
               />
             );
           },
           headerStyle: {
-            backgroundColor: '#FBF9F4',
+            backgroundColor: "#FBF9F4",
           },
           headerTitleStyle: {
-            color: '#413d34',
+            color: "#413d34",
             fontSize: 20,
-            fontWeight: '500',
+            fontWeight: "500",
           },
           tabBarLabelStyle: {
             fontSize: 12,
@@ -109,34 +112,34 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name='SamplePushToken'
+        name="SamplePushToken"
         component={SamplePushToken}
         options={{
-          tabBarLabel: 'SamplePushToken',
+          tabBarLabel: "SamplePushToken",
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <SvgIcon
-                name='heart'
-                stroke={focused ? '#FBF9F4' : '#797979'}
+                name="heart"
+                stroke={focused ? "#FBF9F4" : "#797979"}
                 strokeWidth={focused ? 2 : 1.5}
                 size={24}
               />
             );
           },
           headerStyle: {
-            backgroundColor: '#2A2322',
+            backgroundColor: "#2A2322",
           },
           headerTitleStyle: {
             // color: BLACK_COLOR,
-            color: '#F9F5EB',
+            color: "#F9F5EB",
             fontSize: 20,
-            fontWeight: '500',
+            fontWeight: "500",
           },
           tabBarLabelStyle: {
             fontSize: 12,
           },
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

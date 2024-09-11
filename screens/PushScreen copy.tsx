@@ -74,8 +74,8 @@ function PushScreen() {
         title: truncateDescription(description),
         description: description,
         sender_uuid: await Storage.getItem("uuid"),
-        // main_view_yn: mainCheck ? "Y" : "N",
-        // reply_yn: receiveCheck ? "Y" : "N",
+        main_view_yn: mainCheck ? "Y" : "N",
+        reply_yn: receiveCheck ? "Y" : "N",
       })
       .then((response) => {
         // 성공적으로 요청을 처리한 경우
@@ -192,13 +192,13 @@ function PushScreen() {
                 style={{
                   borderWidth: 0.5,
                   borderColor: "#2A2322",
-                  borderRadius: 100,
+                  borderRadius: 3,
                   padding: 20,
                   flexDirection: "row",
                   position: "absolute",
                   bottom: 0,
                   marginBottom: 70,
-                  // width: width - 40,
+                  width: width - 40,
                   alignItems: "center",
                   justifyContent: "space-between",
                 }}
@@ -210,7 +210,7 @@ function PushScreen() {
                     justifyContent: "space-around",
                   }}
                 >
-                  {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <CustomCheckBox
                       checkState={receiveCheck}
                       setCheckState={setReceiveCheck}
@@ -237,7 +237,7 @@ function PushScreen() {
                     >
                       메인 화면에 공개할래요.
                     </Text>
-                  </View> */}
+                  </View>
                 </View>
                 <Animatable.View
                   animation="pulse"
@@ -264,7 +264,7 @@ function PushScreen() {
                       size={40}
                     />
                     <Text style={{ textAlign: "center", marginTop: 10 }}>
-                      보내기!
+                      send
                     </Text>
                   </Pressable>
                 </Animatable.View>
