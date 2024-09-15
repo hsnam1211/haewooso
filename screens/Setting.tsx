@@ -1,185 +1,197 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import * as Animatable from "react-native-animatable";
+
 import {
-  ScrollView,
-  RefreshControl,
-  Dimensions,
-  View,
-  Platform,
-  Image,
-  Text,
-  InteractionManager,
-  Pressable,
-  Linking,
   Animated,
+  Dimensions,
+  Image,
+  InteractionManager,
+  Keyboard,
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Keyboard,
-  KeyboardAvoidingView
-} from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useQueryClient } from 'react-query';
-import { useRecoilState } from 'recoil';
-import styled from 'styled-components';
-import * as Animatable from "react-native-animatable";
-import SvgIcon from '../src/components/SvgIcon';
-import { height, width } from '../src/util/screenDimensions';
-import axios from 'axios';
-import { taptic } from '../src/util/taptic';
-import CheckBox from '@react-native-community/checkbox';
-import { useNavigation } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
-import { getMessageState } from '../src/recoil/atoms';
+  View,
+} from "react-native";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { height, width } from "../src/util/screenDimensions";
+import { onPressMoveSystemSetting, requestUserPermission } from "../App";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+
+import CheckBox from "@react-native-community/checkbox";
+import CommonModal from "../src/components/CommonModal";
+import LinearGradient from "react-native-linear-gradient";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Storage } from "../src/util/storage";
+import SvgIcon from "../src/components/SvgIcon";
+import axios from "axios";
+import { getMessageState } from "../src/recoil/atoms";
+import styled from "styled-components";
+import { taptic } from "../src/util/taptic";
+import usePush from "../src/hooks/usePush";
+import { useRecoilState } from "recoil";
 
 function Setting({ route }) {
-  const [msgData, setMsgData] = useRecoilState(getMessageState)
-  const data = route.params
-  const navigation = useNavigation()
+  const [msgData, setMsgData] = useRecoilState(getMessageState);
+  const data = route.params;
+  const navigation = useNavigation();
 
-  const [receiveCheck, setReceiveCheck] = useState(true)
-  const [mainCheck, setMainCheck] = useState(true)
-  const [description, setDescription] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [mainCheck, setMainCheck] = useState(true);
+  const [description, setDescription] = useState("");
+  const { isPush, setIsPush, updatePushState } = usePush();
 
-  const isEmptyDescription = (text) => {
-    return !(!text || text.trim().length === 0)
-  }
+  const prevIsPushRef = useRef<any>();
 
-  const truncateDescription = (description) => {
-    if (description.length > 15) {
-      return description.slice(0, 15) + '...';
-    } else {
-      return description;
+  useEffect(() => {
+    // 이전 값과 현재 값을 비교
+    if (
+      prevIsPushRef.current !== isPush &&
+      prevIsPushRef.current !== undefined
+    ) {
+      // TODO:
+      updatePushState(isPush);
     }
-  }
+    // 현재 값을 ref에 저장
+    prevIsPushRef.current = isPush;
+  }, [isPush]);
 
   const handlePress = () => {
-    // axios 호출
-    axios.post('http://15.165.155.62:8080/v1/push', {
-      title: truncateDescription(description),
-      description: description,
-      sender: 'uuid'
-    })
-      .then(response => {
-        // 성공적으로 요청을 처리한 경우
-        console.log(response.data);
-      })
-      .catch(error => {
-        // 요청 처리 중에 오류가 발생한 경우
-        console.error(error);
-      });
+    onPressMoveSystemSetting();
+    setModalVisible(false);
   };
 
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
+  const CustomCheckBox = ({ checkState, setCheckState, callback }) => {
+    return Platform.OS === "ios" ? (
+      <View>
+        <Pressable
+          style={{
+            borderWidth: 1,
+            borderRadius: 4,
+            width: 16,
+            height: 16,
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: 5,
+          }}
+          onPress={async () => {
+            if (!checkState) {
+              if (!(await requestUserPermission())) {
+                onPressMoveSystemSetting();
+                return;
+              }
+              setCheckState(prev => !prev);
+              return;
+            }
 
-  const CustomCheckBox = ({ checkState, setCheckState }) => {
-    return (Platform.OS === 'ios' ?
-      <CheckBox
-        onCheckColor={'#000000'}
-        tintColor={'#000000'}
-        onTintColor={'#000000'}
-        boxType={'square'}
-        lineWidth={1}
-        disabled={false}
-        value={checkState}
-        onValueChange={(newValue) => setCheckState(newValue)}
-        style={{ width: 14, height: 14, marginRight: 7 }}
-      />
-      :
+            setModalVisible(true);
+          }}
+        >
+          {checkState && (
+            <SvgIcon name={"check"} strokeWidth={1} stroke={"#000"} size={15} />
+          )}
+        </Pressable>
+      </View>
+    ) : (
       <CheckBox
         style={{ transform: [{ scale: 0.8 }] }}
-        tintColors={{ true: 'black', false: 'black' }}
+        tintColors={{ true: "black", false: "black" }}
         disabled={false}
         value={checkState}
-        onValueChange={(newValue) => setCheckState(newValue)}
-      />)
-  }
-
+        onValueChange={newValue => setCheckState(newValue)}
+      />
+    );
+  };
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: '#FBF9F4', paddingLeft: 12 }}>
-      <View style={{ marginTop: 30, marginBottom: 10 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 13 }}>
-          내 메시지
-        </Text>
-      </View>
-      <View style={{ width: width, flexDirection: 'row' }}>
-        <Pressable
-          style={[styles.messageBox, { marginRight: 2 }]}
-          onPressIn={() => {
-            taptic()
-          }}
-          onPressOut={() => {
-            taptic()
-            navigation.navigate('StackCard', {
-              screen: 'ReceiveMsg',
-              animation: 'fade'
-            });
-          }}
-        >
-          <View style={[styles.receiveMessage, { backgroundColor: msgData ? '#413d34' : 'transparent', }]}>
-            <Text style={{ color: '#FBF9F4', bottom: Platform.select({ ios: 0, android: 2 }), fontSize: Platform.select({ ios: 14, android: 12 }) }}>!</Text>
-          </View>
-          <Text style={{ fontSize: Platform.select({ ios: 14, android: 13 }) }}>
-            받은 메시지 보기
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[styles.messageBox, { marginLeft: 2 }]}
-          onPressIn={() => {
-            taptic()
-          }}
-          onPressOut={() => {
-            taptic()
-            navigation.navigate('StackModal', {
-              screen: 'PushScreen',
-              animation: 'fade'
-            });
+    <>
+      <CommonModal
+        title="새로 날아온 근심"
+        description="알림을 받아야 하는데요.."
+        type="alert"
+        confirmText="끌래요"
+        closeText="그냥 둘게요"
+        visible={modalVisible}
+        onConfirm={handlePress}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+      />
+      <View style={{ flex: 1, backgroundColor: "#FBF9F4", paddingLeft: 12 }}>
+        <View
+          style={{
+            marginTop: 30,
+            marginBottom: Platform.select({ ios: 10, android: 3 }),
           }}
         >
-          <Text style={{ fontSize: Platform.select({ ios: 14, android: 13 }) }}>
-            보낸 메시지 보기
+          <Text style={{ fontWeight: "bold", fontSize: 13 }}>
+            푸시 알림 설정
           </Text>
-        </Pressable>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginLeft: Platform.select({ ios: 4, android: 0 }),
+          }}
+        >
+          <CustomCheckBox
+            // callback={async (newValue: boolean) => {
+            //   if (!newValue) {
+            //     // alert(newValue);
+            //     setModalVisible(true);
+            //     return false;
+            //   } else {
+            //     // alert(newValue);
+            // if (!(await requestUserPermission())) {
+            //   onPressMoveSystemSetting();
+            // }
+            //     return false;
+            //     // return true;
+            //   }
+            // }}
+            callback={() => {}}
+            checkState={isPush}
+            setCheckState={setIsPush}
+          />
+          <Text
+            style={{
+              textAlignVertical: "center",
+              fontSize: Platform.select({ ios: 14, android: 13 }),
+            }}
+          >
+            푸시 알림을 받을래요.
+          </Text>
+        </View>
       </View>
-
-      <View style={{ marginTop: 30, marginBottom: Platform.select({ ios: 10, android: 3 }) }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 13 }}>
-          푸시 알림 설정
-        </Text>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: Platform.select({ ios: 4, android: 0 }) }}>
-        <CustomCheckBox checkState={receiveCheck} setCheckState={setReceiveCheck} />
-        <Text style={{ textAlignVertical: 'center', fontSize: Platform.select({ ios: 14, android: 13 }) }}>
-          푸시 알림을 받을래요.
-        </Text>
-      </View>
-    </View>
-
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   receiveMessage: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
     width: 15,
     height: 15,
     borderRadius: 50,
     right: 32,
-    top: 28
+    top: 28,
   },
   messageBox: {
     height: 100,
     width: (width - 26) / 2,
     borderRadius: 4,
     borderWidth: 0.5,
-    borderColor: '#413d34',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "#413d34",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

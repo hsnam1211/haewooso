@@ -1,46 +1,47 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useRef,
-  useCallback,
-} from "react";
+import * as Animatable from "react-native-animatable";
 
 import {
-  View,
-  Text,
-  Pressable,
+  ActivityIndicator,
+  Animated,
   AppState,
-  Image,
   AppStateStatus,
   FlatList,
+  Image,
   Platform,
-  Animated,
-  VirtualizedList,
+  Pressable,
+  RefreshControl,
+  ScrollView,
   SectionList,
   StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-  RefreshControl,
+  Text,
+  View,
+  VirtualizedList,
 } from "react-native";
-import styled from "styled-components";
-import { Storage } from "../src/util/storage";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { getMessageState, sendMessageCount } from "../src/recoil/atoms";
-import messaging from "@react-native-firebase/messaging";
-import { width, height } from "../src/util/screenDimensions";
-import * as Animatable from "react-native-animatable";
+import { height, width } from "../src/util/screenDimensions";
+
+import ArrowClick from "../assets/arrowClick.png";
+import CommonModal from "../src/components/CommonModal";
 import DeviceInfo from "react-native-device-info";
 import { Easing } from "react-native-reanimated";
 import LinearGradient from "react-native-linear-gradient";
+import { Storage } from "../src/util/storage";
 import SvgIcon from "../src/components/SvgIcon";
-import { taptic } from "../src/util/taptic";
-import { useNavigation } from "@react-navigation/native";
-import ArrowClick from "../assets/arrowClick.png";
 import Toast from "react-native-toast-message";
-import { useRecoilState } from "recoil";
-import CommonModal from "../src/components/CommonModal";
-import { useGetMsg } from "../src/api/useApi";
 import axios from "axios";
+import messaging from "@react-native-firebase/messaging";
+import styled from "styled-components";
+import { taptic } from "../src/util/taptic";
+import { useGetMsg } from "../src/api/useApi";
+import { useNavigation } from "@react-navigation/native";
+import { useRecoilState } from "recoil";
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -111,7 +112,7 @@ const data = [
 ];
 
 function Main() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [message, setMessage] = useState(undefined);
   const [msgData, setMsgData] = useRecoilState(getMessageState);
   const [number, setNumber] = useRecoilState(sendMessageCount);
@@ -167,7 +168,7 @@ function Main() {
   };
 
   const getMessageHandle = async () => {
-    await Storage.getItem("message").then((msg) => {
+    await Storage.getItem("message").then(msg => {
       console.log("background에서 가져온 Message : ", msg);
       if (msg) {
         setMsgData(true);
@@ -192,7 +193,7 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    const subscribeToMessages = messaging().onMessage(async (remoteMessage) => {
+    const subscribeToMessages = messaging().onMessage(async remoteMessage => {
       console.log("Main subscribeToMessages", remoteMessage);
       ToastHandle(remoteMessage?.notification?.body, "info");
       // alert(remoteMessage?.notification?.body)
@@ -408,7 +409,7 @@ function Main() {
                   screen: "PushScreen",
                   animation: "fade",
                 });
-                setNumber((p) => p - 1);
+                setNumber(p => p - 1);
               } else {
                 adAlert();
               }
@@ -602,7 +603,7 @@ function Main() {
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     {
       useNativeDriver: false,
-      listener: (event) => {
+      listener: event => {
         const currentScrollY = event.nativeEvent.contentOffset.y;
       },
     }

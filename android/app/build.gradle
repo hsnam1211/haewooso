@@ -131,6 +131,9 @@ android {
             include (*reactNativeArchitectures())
         }
     }
+    buildFeatures {
+        prefab=true // add this
+    }
     signingConfigs {
         debug {
             storeFile file('debug.keystore')

@@ -1,4 +1,4 @@
-import { useRecoilState, atom } from 'recoil';
+import { atom, useRecoilState } from 'recoil';
 
 export const dataLimitState = atom({
     key: 'dataLimit', // unique ID (with respect to other atoms/selectors)
@@ -71,4 +71,9 @@ export const getMessageState = atom({
 export const sendMessageCount = atom({
     key: 'sendMessageCount', // unique ID (with respect to other atoms/selectors)
     default: 5, // default value (aka initial value)
+});
+
+export const isPushState = atom({
+    key: 'isPushState', // unique ID (with respect to other atoms/selectors)
+    default: undefined, // default value (aka initial value)
 });

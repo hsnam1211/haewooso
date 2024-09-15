@@ -1,27 +1,27 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
-
 import {
-  View,
-  Text,
-  Pressable,
+  Animated,
   AppState,
   AppStateStatus,
-  Platform,
-  Animated,
   Image,
+  Platform,
+  Pressable,
+  Text,
+  View,
 } from "react-native";
-import styled from "styled-components";
-import { Storage } from "../src/util/storage";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { height, width } from "../src/util/screenDimensions";
 
-import messaging from "@react-native-firebase/messaging";
-import { width, height } from "../src/util/screenDimensions";
-
+import ArrowClick from "../assets/arrowClick.png";
 import DeviceInfo from "react-native-device-info";
-
+import { MessageButton } from "../src/components/MessageButton";
+import { Storage } from "../src/util/storage";
+import messaging from "@react-native-firebase/messaging";
+import { requestUserPermission } from "../App";
+import styled from "styled-components";
 import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
-import { MessageButton } from "../src/components/MessageButton";
-import ArrowClick from "../assets/arrowClick.png";
+import usePush from "../src/hooks/usePush";
+
 const Container = styled(View)`
   margin-right: 0px;
   margin-left: 0px;
@@ -30,6 +30,7 @@ const Container = styled(View)`
 function Main() {
   const navigation = useNavigation<any>();
   const [message, setMessage] = useState(undefined);
+  const { isPush, setIsPush } = usePush();
   // const [msgData, setMsgData] = useRecoilState(getMessageState)
 
   const appState = useRef(AppState.currentState);
@@ -37,12 +38,22 @@ function Main() {
   const [backgroundTime, setBackgroundTime] = useState<number>(0);
   const [foregroundTime, setForegroundTime] = useState<number>(0);
 
-  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+  const pushOnOffCheck = async () => {
+    const isPushState = await requestUserPermission();
+    // TODO: 푸시 알림 체크 서버로 전송
+    setIsPush(isPushState);
+  };
+
+  const handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (
       appState.current.match(/inactive|background/) &&
       nextAppState === "active"
     ) {
       console.log("foreground 전환");
+
+      await pushOnOffCheck();
+      // TODO: 푸시 알림 체크 서버로 전송
+
       setForegroundTime(Date.now());
       getMessageHandle();
     } else {
@@ -54,7 +65,7 @@ function Main() {
   };
 
   const getMessageHandle = async () => {
-    await Storage.getItem("message").then((msg) => {
+    await Storage.getItem("message").then(msg => {
       console.log("background에서 가져온 Message : ", msg);
       if (msg) {
         setMessage({
@@ -72,13 +83,15 @@ function Main() {
       handleAppStateChange
     );
 
+    pushOnOffCheck();
+
     return () => {
       appStateListener.remove();
     };
   }, []);
 
   useEffect(() => {
-    const subscribeToMessages = messaging().onMessage(async (remoteMessage) => {
+    const subscribeToMessages = messaging().onMessage(async remoteMessage => {
       alert("fore ground");
       console.log("Main subscribeToMessages", remoteMessage);
       setMessage({

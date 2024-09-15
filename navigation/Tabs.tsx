@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
-  View,
-  Text,
-  useColorScheme,
+  Image,
   Platform,
   Pressable,
-  Image,
+  Text,
+  View,
+  useColorScheme,
 } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { useRecoilState } from "recoil";
 import DeviceInfo from "react-native-device-info";
 import Sample from "../screens/Sample";
-import SvgIcon from "../src/components/SvgIcon";
 import SamplePushToken from "../screens/SamplePushToken";
-import StickyHeaderExample from "../screens/StickyHeaderExample";
-import SimpleMain from "../screens/SimpleMain";
 import Setting from "../screens/Setting";
+import SimpleMain from "../screens/SimpleMain";
+import StickyHeaderExample from "../screens/StickyHeaderExample";
+import SvgIcon from "../src/components/SvgIcon";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useRecoilState } from "recoil";
 
 const Tab = createBottomTabNavigator();
 
@@ -83,19 +83,22 @@ function Tabs() {
         //   },
         // }}
       />
-      {/* <Tab.Screen
-        name="MY"
+      <Tab.Screen
+        name="설정"
         component={Setting}
         options={{
-          tabBarLabel: "MY",
+          tabBarLabel: "설정",
           tabBarIcon: ({ focused, color, size }) => {
             return (
-              <SvgIcon
-                name="heart"
-                stroke={focused ? "#FBF9F4" : "#797979"}
-                strokeWidth={focused ? 2 : 1.5}
-                size={24}
-              />
+              // <SvgIcon
+              //   name="heart"
+              //   stroke={focused ? "#FBF9F4" : "#797979"}
+              //   strokeWidth={focused ? 2 : 1.5}
+              //   size={24}
+              // />
+              <View>
+                <Text>🙋🏻‍♂️</Text>
+              </View>
             );
           },
           headerStyle: {
@@ -111,7 +114,7 @@ function Tabs() {
           },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="SamplePushToken"
         component={SamplePushToken}
         options={{

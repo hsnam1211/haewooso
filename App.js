@@ -1,38 +1,55 @@
-import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  AppState,
   Linking,
+  Platform,
   StatusBar,
   Text,
   View,
-  AppState,
-  Platform,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import Root from './navigation/Root';
-import { PermissionsAndroid } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import notifee from '@notifee/react-native';
-import { RecoilRoot } from 'recoil';
-import { v4 as uuidv4 } from "uuid";
-import { Storage } from './src/util/storage';
-import Toast from 'react-native-toast-message';
-import { toastConfig } from './src/util/toastMsg';
-import axios from 'axios';
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import React, { useEffect, useState } from 'react';
 
-async function requestUserPermission() {
-  const authStatus = await messaging().requestPermission();
-  const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+import { NavigationContainer } from '@react-navigation/native';
+import { PermissionsAndroid } from 'react-native';
+import { RecoilRoot } from 'recoil';
+import Root from './navigation/Root';
+import { Storage } from './src/util/storage';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import messaging from '@react-native-firebase/messaging';
+import notifee from '@notifee/react-native';
+import { toastConfig } from './src/util/toastMsg';
+import { v4 as uuidv4 } from "uuid";
 
-  if (enabled) {
-    console.log('Authorization status:', authStatus);
+/**
+ * 알림 설정 창으로 이동
+ */
+export const onPressMoveSystemSetting = () => {
+  Linking.openSettings();
+};
+
+/**
+ * 알림 설정 체크
+ * @returns 
+ */
+export async function requestUserPermission() {
+  let enabled
+  if(Platform.OS === 'ios') {
+    const authStatus = await messaging().requestPermission();
+    enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    
+    return enabled ? true : false;
+  } else {
+    enabled = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+    );
   }
+  return enabled ? true : false;
 }
 
 async function getUUID() {
@@ -45,29 +62,15 @@ async function getUUID() {
   }
 }
 
-// async function onDisplayNotification({ title = '', body = '' }) {
-//   const channelId = await notifee.createChannel({
-//     id: 'channelId',
-//     name: 'channelName',
-//   });
-
-//   await notifee.displayNotification({
-//     title,
-//     body,
-//     android: {
-//       channelId,
-//     },
-//   });
-// }
-
 async function getFcmToken() {
   try {
     let platform = Platform.OS
     // console.log platform / token
+    await Storage.removeItem('fcmToken')
     console.log({ platform }, await messaging().getToken());
     const storedToken = await Storage.getItem('fcmToken');
     if (!storedToken) {
-      await messaging().registerDeviceForRemoteMessages();
+      // await messaging().registerDeviceForRemoteMessages();
       const fcmToken = await messaging().getToken();
       console.log('[FCM Token]', fcmToken);
       await Storage.setItem('fcmToken', fcmToken);
@@ -78,7 +81,7 @@ async function getFcmToken() {
     } else {
       const currentToken = await messaging().getToken();
       if (currentToken !== storedToken) {
-        await messaging().registerDeviceForRemoteMessages();
+        // await messaging().registerDeviceForRemoteMessages();
         const newToken = await messaging().getToken();
         await Storage.setItem('fcmToken', newToken);
 
@@ -91,16 +94,17 @@ async function getFcmToken() {
   }
 }
 
+// TODO: 유저 업데이트 날짜..?
 const updateDate = async (uuid) => {
-  axios.post('http://15.165.155.62:8080/v1/main', {
-    uuid: uuid
-  }).then(response => {
-    console.log('updateDate', response.data)
-  })
+  // axios.post('http://15.165.155.62:8080/v1/main', {
+  //   uuid: uuid
+  // }).then(response => {
+  //   console.log('updateDate', response.data)
+  // })
 }
 
 const userAdd = async (uuid, fcmToken) => {
-  axios.post('http://15.165.155.62:8080/v1/adduser', {
+  axios.post('https://port-0-haewooso-backend-m102oivkf1946555.sel4.cloudtype.app/member/v1/createuser', {
     uuid: uuid,
     push_token: fcmToken,
   })
@@ -138,13 +142,8 @@ export default function App() {
   const queryClient = new QueryClient()
   useEffect(() => {
     const initialize = async () => {
-      if (Platform.OS === 'ios') {
-        await requestUserPermission();
-      } else {
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-        );
-      }
+      await Storage.setItem("setting", false)
+      await requestUserPermission();
       await getUUID();
       await getFcmToken();
       scheduleFCMTokenRefresh();
