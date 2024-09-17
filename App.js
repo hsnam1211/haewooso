@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Modal, Provider as PaperProvider, Portal } from 'react-native-paper';
 import {
   QueryClient,
   QueryClientProvider,
@@ -167,14 +168,16 @@ export default function App() {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <NavigationContainer>
-            <Root />
-          </NavigationContainer>
-        </RecoilRoot>
-        <Toast config={toastConfig} />
-      </QueryClientProvider>
+      <PaperProvider>
+        <QueryClientProvider client={queryClient}>        
+          <RecoilRoot>
+            <NavigationContainer>
+              <Root />
+            </NavigationContainer>
+          </RecoilRoot>
+          <Toast config={toastConfig} />
+        </QueryClientProvider>
+      </PaperProvider>
     </>
   );
 }

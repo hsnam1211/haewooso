@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 
 import { width } from "../util/screenDimensions";
 
@@ -19,7 +19,8 @@ function CommonModal({
   onConfirm,
   closeText,
   confirmText,
-}) {
+  children,
+}: any) {
   const [modalVisible, setModalVisible] = useState(visible);
 
   const handlePress = () => {
@@ -82,7 +83,7 @@ function CommonModal({
           }}
         >
           <View style={{ padding: 14 }}>
-            <Text>{description}</Text>
+            {children ? children : <Text>{description}</Text>}
           </View>
           <View
             style={{
