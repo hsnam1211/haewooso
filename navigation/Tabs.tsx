@@ -18,6 +18,7 @@ import StickyHeaderExample from "../screens/StickyHeaderExample";
 import SvgIcon from "../src/components/SvgIcon";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useRecoilState } from "recoil";
+import ReceiveMsg from "../screens/ReceiveMsg";
 
 const Tab = createBottomTabNavigator();
 
@@ -82,6 +83,31 @@ function Tabs() {
         //     console.log(e);
         //   },
         // }}
+      />
+      <Tab.Screen
+        name="메시지함"
+        component={ReceiveMsg}
+        options={{
+          tabBarLabel: "메시지함",
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <View>
+                <Text>💌</Text>
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FBF9F4",
+          },
+          headerTitleStyle: {
+            color: "#413d34",
+            fontSize: 20,
+            fontWeight: "500",
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
+        }}
       />
       <Tab.Screen
         name="설정"

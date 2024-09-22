@@ -27,7 +27,7 @@ import React, {
 import { getMessageState, sendMessageCount } from "../src/recoil/atoms";
 import { height, width } from "../src/util/screenDimensions";
 
-import ArrowClick from "../assets/arrowClick.png";
+import ArrowClick from "@assets/arrowClick.png";
 import CommonModal from "../src/components/CommonModal";
 import DeviceInfo from "react-native-device-info";
 import { Easing } from "react-native-reanimated";
@@ -168,7 +168,7 @@ function Main() {
   };
 
   const getMessageHandle = async () => {
-    await Storage.getItem("message").then(msg => {
+    await Storage.getItem("message").then((msg) => {
       console.log("background에서 가져온 Message : ", msg);
       if (msg) {
         setMsgData(true);
@@ -193,7 +193,7 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    const subscribeToMessages = messaging().onMessage(async remoteMessage => {
+    const subscribeToMessages = messaging().onMessage(async (remoteMessage) => {
       console.log("Main subscribeToMessages", remoteMessage);
       ToastHandle(remoteMessage?.notification?.body, "info");
       // alert(remoteMessage?.notification?.body)
@@ -409,7 +409,7 @@ function Main() {
                   screen: "PushScreen",
                   animation: "fade",
                 });
-                setNumber(p => p - 1);
+                setNumber((p) => p - 1);
               } else {
                 adAlert();
               }
@@ -603,7 +603,7 @@ function Main() {
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     {
       useNativeDriver: false,
-      listener: event => {
+      listener: (event) => {
         const currentScrollY = event.nativeEvent.contentOffset.y;
       },
     }
