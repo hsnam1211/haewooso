@@ -41,6 +41,7 @@ export async function requestUserPermission() {
   let enabled
   if(Platform.OS === 'ios') {
     const authStatus = await messaging().requestPermission();
+    
     enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     

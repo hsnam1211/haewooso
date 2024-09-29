@@ -12,7 +12,7 @@ import { useRecoilState } from "recoil";
 function DetailMessage({ route }) {
   const data = route?.params?.[0] || route?.params;
   const type = route?.params?.[1];
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const [number, setNumber] = useRecoilState(sendMessageCount);
 
   // modal control
@@ -185,28 +185,195 @@ function DetailMessage({ route }) {
               </Text>
             </View>
           </View>
+          <ScrollView>
+            <View style={{ width: width - 60, marginTop: 30 }}>
+              <View style={{ flexDirection: "row", height: 20, top: 3 }}>
+                <View
+                  style={{
+                    backgroundColor: "#2A2322",
+                    borderRadius: 50,
+                    width: 15,
+                    height: 15,
+                    left: 0,
+                  }}
+                />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    bottom: Platform.select({ ios: 0, android: 3 }),
+                    fontSize: Platform.select({ ios: 14, android: 13 }),
+                    fontWeight: "bold",
+                  }}
+                >
+                  {type !== "target"
+                    ? "첫 번째 익명의 메시지"
+                    : "내가 답장한 메시지"}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: width - 80,
+                  minHeight: 100,
+                }}
+              >
+                <View
+                  style={{
+                    borderLeftColor: "rgba(42, 35, 34, .4)",
+                    borderLeftWidth: 0.5,
+                    left: 7,
+                    bottom: 3,
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: Platform.select({ ios: 14, android: 13 }),
+                      marginTop: 15,
+                      marginBottom: 15,
+                      marginLeft: 25,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕
+                  </Text>
+                </View>
+              </View>
+            </View>
+            {type !== "target" && (
+              <>
+                <View style={{ bottom: 6 }}>
+                  <View style={{ flexDirection: "row", height: 20, top: 3 }}>
+                    <View
+                      style={{
+                        backgroundColor: "#2A2322",
+                        borderRadius: 50,
+                        width: 15,
+                        height: 15,
+                        left: 0,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        bottom: Platform.select({ ios: 0, android: 3 }),
+                        fontSize: Platform.select({ ios: 14, android: 13 }),
+                        fontWeight: "bold",
+                      }}
+                    >
+                      두 번째 익명의 메시지
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: width - 80,
+                      minHeight: 100,
+                    }}
+                  >
+                    <View
+                      style={{
+                        borderLeftColor: "rgba(42, 35, 34, .4)",
+                        borderLeftWidth: 0.5,
+                        left: 7,
+                        bottom: 3,
+                        flex: 1,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: Platform.select({ ios: 14, android: 13 }),
+                          marginTop: 15,
+                          marginBottom: 15,
+                          marginLeft: 25,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        위의 코드에서 Text 컴포넌트에 flexWrap: 'wrap' 속성을
+                        추가하여 텍스트가 넘칠 경우 자동으로 다음 줄로
+                        넘어가도록 설정하였습니다
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={{ bottom: 12 }}>
+                  <View style={{ flexDirection: "row", height: 20, top: 3 }}>
+                    <View
+                      style={{
+                        backgroundColor: "#2A2322",
+                        borderRadius: 50,
+                        width: 15,
+                        height: 15,
+                        left: 0,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        bottom: Platform.select({ ios: 0, android: 3 }),
+                        fontSize: Platform.select({ ios: 14, android: 13 }),
+                        fontWeight: "bold",
+                      }}
+                    >
+                      세 번째 익명의 메시지
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: width - 80,
+                      minHeight: 100,
+                    }}
+                  >
+                    <View
+                      style={{
+                        borderLeftColor: "rgba(42, 35, 34, .4)",
+                        borderLeftWidth: 0.5,
+                        left: 7,
+                        bottom: 3,
+                        flex: 1,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: Platform.select({ ios: 14, android: 13 }),
+                          marginTop: 15,
+                          marginBottom: 15,
+                          marginLeft: 25,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        XML 매퍼 작성: MyBatis XML 매퍼 파일에서 SQL 쿼리와 매핑
+                        정보를 작성합니다. UsersMapper 인터페이스와 동일한
+                        이름의 XML 파일을 작성해야 합니다. 예시를
+                        보여드리겠습니다:Service 클래스에서 MyBatis 사용: 변경된
+                        MyBatis 구성을 사용하여 Service 클래스를 수정합니다.
+                        아래는 FCMNotificationService 클래스의 예시입니다:
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </>
+            )}
+            <View style={{ height: 90 }} />
+          </ScrollView>
         </View>
-
+        {/* {data?.reply_yn === "Y" && ( */}
         <Pressable
           onPressIn={() => {
             taptic();
           }}
           onPressOut={() => {
             taptic();
-            navigation.navigate("StackModal", {
-              screen: "PushScreen",
-              params: { secretCode: "asdasdasdasdasdasd" },
-              animation: "fade",
-            });
-            // if (number >= 1) {
-            //   navigation.navigate("StackModal", {
-            //     screen: "PushScreen",
-            //     animation: "fade",
-            //   });
-            //   setNumber(p => p - 1);
-            // } else {
-            //   adAlert();
-            // }
+            if (number >= 1) {
+              navigation.navigate("StackModal", {
+                screen: "PushScreen",
+                animation: "fade",
+              });
+              setNumber(p => p - 1);
+            } else {
+              adAlert();
+            }
           }}
           style={{
             justifyContent: "center",
@@ -236,10 +403,10 @@ function DetailMessage({ route }) {
               marginTop: 3,
             }}
           >
-            {/* {type ? "답장하기" : `(${number}/5)`} */}
-            답장하기
+            {type ? "답장하기" : `(${number}/5)`}
           </Text>
         </Pressable>
+        {/* )} */}
       </View>
     </>
   );

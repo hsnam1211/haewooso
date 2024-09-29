@@ -33,22 +33,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
 
-function PushScreen({ route }: any) {
-  console.log(route?.params);
+function PushScreen() {
   const navigation = useNavigation();
   const [receiveCheck, setReceiveCheck] = useState(true);
-  const [secretCodeCheck, setSecretCodeCheck] = useState(false);
+  const [mainCheck, setMainCheck] = useState(true);
   const [number, setNumber] = useRecoilState(sendMessageCount);
   const [description, setDescription] = useState("");
-  const [secretCode, setSecretCode] = useState(route?.params?.secretCode);
   const maxLength = 100;
   const maxLines = 10;
-
-  useEffect(() => {
-    if (route?.params?.secretCode) {
-      setSecretCodeCheck(true);
-    }
-  }, []);
 
   const isEmptyDescription = text => {
     return !(!text || text.trim().length === 0);
@@ -70,9 +62,6 @@ function PushScreen({ route }: any) {
       setDescription(inputText);
     }
   };
-  const handleSecretCodeChange = inputText => {
-    setSecretCode(inputText);
-  };
 
   const getNumberOfLines = text => {
     return text.split("\n").length;
@@ -82,7 +71,6 @@ function PushScreen({ route }: any) {
 
   const handlePress = async () => {
     // axios 호출
-    // TODO: 시크릿 코드 유무에 따라서 End Point 분기
     axios
       .post("http://15.165.155.62:8080/v1/push", {
         title: truncateDescription(description),
@@ -178,69 +166,41 @@ function PushScreen({ route }: any) {
               }}
               value={description}
               maxLength={100}
+              // onChangeText={text => setDescription(text)}
               onChangeText={handleTextChange}
               placeholder={
                 !isEmptyDescription(description)
-                  ? "근심을 털어놓아보세요. 익명의 누군가에게 전달되어요."
+                  ? "근심을 털어놓아보세요. 익명의 누군가에게 전달됩니다."
                   : ""
               }
               multiline={true}
+              // onSubmitEditing={handlePress}
+              // onContentSizeChange={e => {
+              //   if (Platform.OS === 'ios') {
+
+              //     console.log(e.nativeEvent.contentSize.height / 25) // prints number of lines
+              //   } else {
+
+              //     console.log(e.nativeEvent.contentSize.height / 26)
+              //   }
+              // }
+              // }
             />
             <Text
               style={{ width: "100%", textAlign: "right", color: "gray" }}
             >{`${description.length}/${maxLength}`}</Text>
-            {secretCodeCheck && (
-              <View
-                style={{
-                  width: "100%",
-                  left: -10,
-                  position: "relative",
-
-                  paddingBottom: 14,
-                  paddingTop: 24,
-                }}
-              >
-                <View
-                  style={{
-                    alignItems: "flex-start",
-                    width: "90%",
-                    marginTop: 7,
-                    marginBottom: 7,
-                    flexDirection: "row",
-                  }}
-                >
-                  {isEmptyDescription(secretCode) && <Text>code : </Text>}
-                  <TextInput
-                    style={{
-                      fontSize: Platform.select({ ios: 14, android: 13 }),
-                      color: "lightgray",
-                      top: -5,
-                    }}
-                    value={secretCode}
-                    maxLength={100}
-                    onChangeText={handleSecretCodeChange}
-                    placeholder={
-                      !isEmptyDescription(secretCode)
-                        ? "공유 받은 시크릿 코드 입력하세요."
-                        : " "
-                    }
-                    multiline={true}
-                  />
-                </View>
-              </View>
-            )}
             {isEmptyDescription(description) && (
               <View
                 style={{
                   borderWidth: 0.5,
                   borderColor: "#2A2322",
-                  borderRadius: 3,
+                  borderRadius: 100,
                   padding: 20,
                   flexDirection: "row",
                   position: "absolute",
                   bottom: 0,
                   marginBottom: 70,
-                  width: width - 40,
+                  // width: width - 40,
                   alignItems: "center",
                   justifyContent: "space-between",
                 }}
@@ -252,10 +212,10 @@ function PushScreen({ route }: any) {
                     justifyContent: "space-around",
                   }}
                 >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <CustomCheckBox
-                      checkState={secretCodeCheck}
-                      setCheckState={setSecretCodeCheck}
+                      checkState={receiveCheck}
+                      setCheckState={setReceiveCheck}
                     />
                     <Text
                       style={{
@@ -263,10 +223,10 @@ function PushScreen({ route }: any) {
                         fontSize: Platform.select({ ios: 14, android: 13 }),
                       }}
                     >
-                      시크릿 코드를 입력할게요.
+                      누군가에게 답장을 받고 싶어요.
                     </Text>
                   </View>
-                  {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <CustomCheckBox
                       checkState={mainCheck}
                       setCheckState={setMainCheck}
@@ -281,6 +241,35 @@ function PushScreen({ route }: any) {
                     </Text>
                   </View> */}
                 </View>
+                {/* <Animatable.View
+                  animation="pulse"
+                  easing="ease-out"
+                  iterationCount="infinite"
+                  useNativeDriver={true}
+                  style={{}}
+                >
+                  <Pressable
+                    onPressIn={() => {
+                      taptic();
+                    }}
+                    onPressOut={() => {
+                      taptic();
+                      setModalVisible(true);
+                      // handlePress()
+                    }}
+                  >
+                    <SvgIcon
+                      name="haewoosoLogo"
+                      fill="#000000"
+                      stroke="#797979"
+                      strokeWidth="1.5"
+                      size={40}
+                    />
+                    <Text style={{ textAlign: "center", marginTop: 10 }}>
+                      보내기!
+                    </Text>
+                  </Pressable>
+                </Animatable.View> */}
                 <Animatable.View
                   animation="pulse"
                   easing="ease-out"
@@ -296,15 +285,34 @@ function PushScreen({ route }: any) {
                       taptic();
                       setModalVisible(true);
                     }}
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 50,
+                      width: 64,
+                      height: 64,
+                      position: "absolute",
+                      bottom: 40,
+                      right: 40,
+                      backgroundColor: "#FBF9F4",
+                      borderWidth: 0.5,
+                      borderColor: "#000000",
+                    }}
                   >
                     <SvgIcon
                       name="haewoosoLogo"
                       fill="#000000"
-                      stroke="#797979"
+                      stroke="#ffffff"
                       strokeWidth="1.5"
-                      size={40}
+                      size={30}
+                      style={{ zIndex: 100 }}
                     />
-                    <Text style={{ textAlign: "center", marginTop: 10 }}>
+                    <Text
+                      style={{
+                        fontSize: Platform.select({ ios: 11, android: 10 }),
+                        marginTop: 3,
+                      }}
+                    >
                       보내기!
                     </Text>
                   </Pressable>

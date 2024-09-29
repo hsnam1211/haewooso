@@ -64,6 +64,7 @@ function Main() {
       console.log("foreground 전환");
 
       await pushOnOffCheck();
+      await pushOnModal();
       // TODO: 푸시 알림 체크 서버로 전송
 
       setForegroundTime(Date.now());
@@ -96,7 +97,6 @@ function Main() {
     );
 
     pushOnOffCheck();
-    pushOnModal();
     return () => {
       appStateListener.remove();
     };
@@ -125,13 +125,14 @@ function Main() {
   }, []);
 
   const InAppMessageModal = () => {
-    const translateY = useRef(new Animated.Value(-100)).current; // 초기 위치 설정
+    const currentValue = -120;
+    const translateY = useRef(new Animated.Value(currentValue)).current; // 초기 위치 설정
 
     useEffect(() => {
       if (modalVisible) {
         // 모달이 열릴 때 애니메이션 실행
         Animated.timing(translateY, {
-          toValue: 0, // 최종 위치
+          toValue: 60, // 최종 위치
           duration: 300, // 애니메이션 시간
           useNativeDriver: true,
         }).start();
@@ -139,7 +140,7 @@ function Main() {
         // 3초 후에 모달을 닫고 애니메이션을 다시 실행
         const timer = setTimeout(() => {
           Animated.timing(translateY, {
-            toValue: -100, // 원래 위치로 돌아가기
+            toValue: currentValue, // 원래 위치로 돌아가기
             duration: 300,
             useNativeDriver: true,
           }).start(() => setModalVisible(false)); // 애니메이션이 끝난 후 모달 닫기
@@ -161,7 +162,7 @@ function Main() {
               alignItems: "center",
               backgroundColor: "transparent",
               position: "absolute", // 위치를 절대적으로 설정
-              top: 10,
+              top: -60,
               width: "100%", // 전체 너비
             }}
           >
@@ -171,16 +172,31 @@ function Main() {
                 setModalVisible(false);
               }}
               style={{
-                borderBottomRightRadius: 6,
-                borderBottomLeftRadius: 6,
+                height: DeviceInfo.hasNotch() ? 140 : 100,
                 padding: 20,
+                paddingTop: 60,
                 width: width,
-                backgroundColor: "gray",
+                backgroundColor: "#222222",
+                justifyContent: "center",
               }}
             >
-              <Text style={{ color: "#fff" }}>{message?.title}</Text>
-              <Text style={{ color: "#fff" }}>{message?.body}</Text>
-              <Text>확인 되었으면 클릭!</Text>
+              <View style={DeviceInfo.hasNotch() ? {} : { bottom: 20 }}>
+                <Text style={{ color: "#fff", marginBottom: 5 }}>
+                  {message?.title}{" "}
+                </Text>
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode={"tail"}
+                  style={{ color: "#fff" }}
+                >
+                  {"disjf;ojasoifjasodifjsdaoifja;oois"}
+                  {/* {
+                    "disjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;ois"
+                  } */}
+                </Text>
+                {/* <Text style={{ color: "#fff" }}>{message?.title}</Text>
+              <Text style={{ color: "#fff" }}>{message?.body}</Text> */}
+              </View>
             </Pressable>
           </Animated.View>
         </Portal>
