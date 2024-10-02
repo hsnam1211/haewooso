@@ -30,3 +30,4 @@ export { default as dropDown } from "../../assets/dropDown.svg";
 export { default as medianceLogo } from "../../assets/medianceLogo.svg";
 export { default as labsLogo } from "../../assets/labsLogo.svg";
 export { default as haewoosoLogo } from "../../assets/haewoosoLogo.svg";
+export { default as close } from "../../assets/close.svg";

@@ -85,6 +85,7 @@ function Setting({ route }) {
       .catch(error => {
         // 요청 처리 중에 오류가 발생한 경우
         console.error(error);
+        console.log('/v1/push')
       });
   };
 

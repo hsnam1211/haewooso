@@ -22,6 +22,7 @@ import { height, width } from "../src/util/screenDimensions";
 
 import CheckBox from "@react-native-community/checkbox";
 import CommonModal from "../src/components/CommonModal";
+import { HW_URL } from "../src/res/env";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Storage } from "../src/util/storage";
 import SvgIcon from "../src/components/SvgIcon";
@@ -32,6 +33,10 @@ import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
+
+export const isEmptyDescription = text => {
+  return !(!text || text.trim().length === 0);
+};
 
 function PushScreen({ route }: any) {
   console.log(route?.params);
@@ -49,10 +54,6 @@ function PushScreen({ route }: any) {
       setSecretCodeCheck(true);
     }
   }, []);
-
-  const isEmptyDescription = text => {
-    return !(!text || text.trim().length === 0);
-  };
 
   const truncateDescription = description => {
     if (description.length > 15) {
@@ -83,14 +84,19 @@ function PushScreen({ route }: any) {
   const handlePress = async () => {
     // axios 호출
     // TODO: 시크릿 코드 유무에 따라서 End Point 분기
+    const endPoint = isEmptyDescription(secretCode)
+      ? "/push/secret/api/v1"
+      : "/push/api/v1";
+    const config = {
+      sendUuid: await Storage.getItem("uuid"),
+      title: "해우소에서 온 메시지",
+      content: description,
+      ...(secretCode && { secretCode }),
+    };
+
+    console.log(config);
     axios
-      .post("http://15.165.155.62:8080/v1/push", {
-        title: truncateDescription(description),
-        description: description,
-        sender_uuid: await Storage.getItem("uuid"),
-        // main_view_yn: mainCheck ? "Y" : "N",
-        // reply_yn: receiveCheck ? "Y" : "N",
-      })
+      .post(`${HW_URL.APP_API}${endPoint}`, config)
       .then(response => {
         // 성공적으로 요청을 처리한 경우
         console.log(response.data);
@@ -99,7 +105,7 @@ function PushScreen({ route }: any) {
       })
       .catch(error => {
         // 요청 처리 중에 오류가 발생한 경우
-        console.error(error);
+        console.log(`${error} /push/api/v1`);
       });
   };
 

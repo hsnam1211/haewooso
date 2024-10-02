@@ -14,6 +14,7 @@ import {
 } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react';
 
+import { HW_URL } from "./src/res/env";
 import { NavigationContainer } from '@react-navigation/native';
 import { PermissionsAndroid } from 'react-native';
 import { RecoilRoot } from 'recoil';
@@ -66,9 +67,8 @@ async function getUUID() {
 
 async function getFcmToken() {
   try {
+    // await Storage.removeItem('fcmToken')
     let platform = Platform.OS
-    // console.log platform / token
-    await Storage.removeItem('fcmToken')
     console.log({ platform }, await messaging().getToken());
     const storedToken = await Storage.getItem('fcmToken');
     if (!storedToken) {
@@ -79,7 +79,6 @@ async function getFcmToken() {
 
       const uuid = await Storage.getItem('uuid');
       await saveUUIDAndTokenToServer(uuid, fcmToken);
-
     } else {
       const currentToken = await messaging().getToken();
       if (currentToken !== storedToken) {
@@ -96,39 +95,60 @@ async function getFcmToken() {
   }
 }
 
-// TODO: 유저 업데이트 날짜..?
-const updateDate = async (uuid) => {
-  // axios.post('http://15.165.155.62:8080/v1/main', {
-  //   uuid: uuid
-  // }).then(response => {
-  //   console.log('updateDate', response.data)
-  // })
+
+/** 유저 접속 시간 */
+export const updateDate = async () => {
+  const uuid = await Storage.getItem('uuid');
+  const lastUpdateDate = await Storage.getItem('lastUpdateDate');
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 오늘 날짜 가져오기
+
+  // 오늘 날짜와 동일하면 API 호출하지 않음
+  if (lastUpdateDate === today) {
+    console.log('오늘 이미 업데이트됨');
+    return;
+  }
+
+  // API 호출
+  try {
+    const response = await axios.patch(`${HW_URL.APP_API}/member/v1/update_connect_date`, {
+      uuid: uuid
+    });
+    console.log('updateDate', `유저 접속 시간 업데이트 성공 ${response.data}`);
+    
+    // 로컬 스토리지에 오늘 날짜로 업데이트
+    await Storage.setItem('lastUpdateDate', today);
+  } catch (error) {
+    console.error('API 호출 실패', error);
+    console.error('/member/v1/update_connect_date');
+  }
 }
 
 const userAdd = async (uuid, fcmToken) => {
-  axios.post('https://port-0-haewooso-backend-m102oivkf1946555.sel4.cloudtype.app/member/v1/createuser', {
+  axios.post(`${HW_URL.APP_API}/member/v1/createuser`, {
     uuid: uuid,
     push_token: fcmToken,
   })
     .then(response => {
       // 성공적으로 요청을 처리한 경우
       console.log('userAdd', response.data);
-      updateDate(uuid);
     })
-    .catch(error => {
+    .catch(async error => {
       // 요청 처리 중에 오류가 발생한 경우
       console.error(error);
+      console.error('/member/v1/createuser');
+
+      // 실패 시 
+      // await Storage.setItem('fcmToken', undefined);
+      // await Storage.setItem('uuid', undefined);
+      // await getFcmToken()
     });
 };
+
 
 async function saveUUIDAndTokenToServer(uuid, fcmToken) {
   // 서버에 UUID와 FCM 토큰을 저장하는 API 호출
   await userAdd(uuid, fcmToken)
   console.log('Saving UUID and FCM Token to server:', uuid, fcmToken);
-  // 실패 시 
-  // await Storage.setItem('fcmToken', undefined);
-  // await Storage.setItem('uuid', undefined);
-  // await getFcmToken()
 }
 
 async function scheduleFCMTokenRefresh() {
@@ -142,6 +162,7 @@ async function scheduleFCMTokenRefresh() {
 
 export default function App() {
   const queryClient = new QueryClient()
+
   useEffect(() => {
     const initialize = async () => {
       await Storage.setItem("setting", false)

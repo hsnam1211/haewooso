@@ -1,7 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { Pressable, Text, View } from "react-native";
+
 import React from "react";
 import { taptic } from "../util/taptic";
-import { View, Text, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export const MessageButton = () => {
   const navigation = useNavigation<any>();
@@ -19,7 +20,7 @@ export const MessageButton = () => {
       >
         <Pressable
           style={{
-            borderRadius: 10,
+            borderRadius: 4,
             justifyContent: "center",
             borderWidth: 1,
             borderColor: "rgba(60, 50, 48, 0.2)",

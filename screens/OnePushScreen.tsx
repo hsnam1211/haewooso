@@ -1,34 +1,36 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import * as Animatable from "react-native-animatable";
+
 import {
-  ScrollView,
-  RefreshControl,
-  Dimensions,
-  View,
-  Platform,
-  Image,
-  Text,
-  InteractionManager,
-  Pressable,
-  Linking,
   Animated,
-  TextInput,
-  TouchableWithoutFeedback,
+  Dimensions,
+  Image,
+  InteractionManager,
   Keyboard,
   KeyboardAvoidingView,
+  Linking,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { height, width } from "../src/util/screenDimensions";
+
+import CheckBox from "@react-native-community/checkbox";
+import CommonModal from "../src/components/CommonModal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Storage } from "../src/util/storage";
+import SvgIcon from "../src/components/SvgIcon";
+import axios from "axios";
+import styled from "styled-components";
+import { taptic } from "../src/util/taptic";
+import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
-import styled from "styled-components";
-import * as Animatable from "react-native-animatable";
-import SvgIcon from "../src/components/SvgIcon";
-import { height, width } from "../src/util/screenDimensions";
-import axios from "axios";
-import { taptic } from "../src/util/taptic";
-import CheckBox from "@react-native-community/checkbox";
-import { Storage } from "../src/util/storage";
-import CommonModal from "../src/components/CommonModal";
-import { useNavigation } from "@react-navigation/native";
 
 function OnePushScreen() {
   const navigation = useNavigation();
@@ -38,11 +40,11 @@ function OnePushScreen() {
   const maxLength = 100;
   const maxLines = 10;
 
-  const isEmptyDescription = (text) => {
+  const isEmptyDescription = text => {
     return !(!text || text.trim().length === 0);
   };
 
-  const truncateDescription = (description) => {
+  const truncateDescription = description => {
     if (description.length > 15) {
       return description.slice(0, 15) + "...";
     } else {
@@ -50,7 +52,7 @@ function OnePushScreen() {
     }
   };
 
-  const handleTextChange = (inputText) => {
+  const handleTextChange = inputText => {
     if (
       getNumberOfLines(inputText) <= maxLines &&
       inputText.length <= maxLength
@@ -59,7 +61,7 @@ function OnePushScreen() {
     }
   };
 
-  const getNumberOfLines = (text) => {
+  const getNumberOfLines = text => {
     return text.split("\n").length;
   };
 
@@ -75,12 +77,12 @@ function OnePushScreen() {
         main_view_yn: mainCheck ? "Y" : "N",
         reply_yn: receiveCheck ? "Y" : "N",
       })
-      .then((response) => {
+      .then(response => {
         // 성공적으로 요청을 처리한 경우
         console.log(response.data);
         navigation.goBack();
       })
-      .catch((error) => {
+      .catch(error => {
         // 요청 처리 중에 오류가 발생한 경우
         console.error(error);
       });
@@ -100,7 +102,7 @@ function OnePushScreen() {
         lineWidth={1}
         disabled={false}
         value={checkState}
-        onValueChange={(newValue) => setCheckState(newValue)}
+        onValueChange={newValue => setCheckState(newValue)}
         style={{ width: 14, height: 14, marginRight: 7 }}
       />
     ) : (
@@ -109,7 +111,7 @@ function OnePushScreen() {
         tintColors={{ true: "black", false: "black" }}
         disabled={false}
         value={checkState}
-        onValueChange={(newValue) => setCheckState(newValue)}
+        onValueChange={newValue => setCheckState(newValue)}
       />
     );
   };

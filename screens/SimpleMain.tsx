@@ -12,7 +12,11 @@ import {
 import { Modal, Portal } from "react-native-paper";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { height, width } from "../src/util/screenDimensions";
-import { onPressMoveSystemSetting, requestUserPermission } from "../App";
+import {
+  onPressMoveSystemSetting,
+  requestUserPermission,
+  updateDate,
+} from "../App";
 
 import ArrowClick from "../assets/arrowClick.png";
 import CommonModal from "../src/components/CommonModal";
@@ -56,6 +60,7 @@ function Main() {
     }
   };
 
+  // TODO: 유저 접속 시간 로직 추가
   const handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (
       appState.current.match(/inactive|background/) &&
@@ -69,6 +74,7 @@ function Main() {
 
       setForegroundTime(Date.now());
       getMessageHandle();
+      await updateDate();
     } else {
       console.log("background 전환");
       setBackgroundTime(Date.now());
@@ -104,7 +110,6 @@ function Main() {
 
   useEffect(() => {
     const subscribeToMessages = messaging().onMessage(async remoteMessage => {
-      alert("foreground");
       console.log("Main subscribeToMessages", remoteMessage);
       setMessage({
         body: remoteMessage?.notification?.body,
@@ -114,14 +119,6 @@ function Main() {
     });
 
     return () => subscribeToMessages();
-  }, []);
-
-  // TODO: 지워야함
-  useEffect(() => {
-    setMessage({
-      body: "안녕하세요?",
-      title: "안녕~",
-    });
   }, []);
 
   const InAppMessageModal = () => {
@@ -189,13 +186,8 @@ function Main() {
                   ellipsizeMode={"tail"}
                   style={{ color: "#fff" }}
                 >
-                  {"disjf;ojasoifjasodifjsdaoifja;oois"}
-                  {/* {
-                    "disjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;oisdisjf;ojasoifjasodifjsdaoifja;osdjfas;oifjs;aoifja;osijfdso;ifjao;sdifja;ois"
-                  } */}
+                  {message?.body}
                 </Text>
-                {/* <Text style={{ color: "#fff" }}>{message?.title}</Text>
-              <Text style={{ color: "#fff" }}>{message?.body}</Text> */}
               </View>
             </Pressable>
           </Animated.View>
@@ -271,13 +263,6 @@ function Main() {
                 click!
               </Text>
             </View>
-            {/* TODO: 지워야함 */}
-            <Button
-              title="Show Modal"
-              onPress={() => {
-                setModalVisible(true);
-              }}
-            />
             <MessageButton />
             <View>
               <Text style={{ marginBottom: 10 }}>그냥 한 번 보내보세요.</Text>
