@@ -9,11 +9,13 @@ import CheckBox from "@react-native-community/checkbox";
 import CommonModal from "../src/components/CommonModal";
 import { HW_URL } from "../src/res/env";
 import InfoModal from "../src/components/InfoModal";
+import { Share } from "react-native";
 import { Storage } from "../src/util/storage";
 import SvgIcon from "../src/components/SvgIcon";
 import axios from "axios";
 import { getMessageState } from "../src/recoil/atoms";
 import { isEmptyDescription } from "./PushScreen";
+import { set } from "react-native-reanimated";
 import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
 import usePush from "../src/hooks/usePush";
@@ -39,16 +41,26 @@ function Setting({ route }) {
       prevIsPushRef.current !== isPush &&
       prevIsPushRef.current !== undefined
     ) {
-      // TODO:
       updatePushState(isPush);
     }
     // 현재 값을 ref에 저장
     prevIsPushRef.current = isPush;
   }, [isPush]);
 
+  useEffect(() => {
+    getStorageSecretCode();
+  }, []);
+
   const handlePress = () => {
     onPressMoveSystemSetting();
     setModalVisible(false);
+  };
+
+  const getStorageSecretCode = async () => {
+    const secretCode = await Storage.getItem("secretCode");
+    if (secretCode) {
+      setSecretCode(secretCode);
+    }
   };
 
   const getSecretCode = async () => {
@@ -57,10 +69,11 @@ function Setting({ route }) {
       .post(`${HW_URL.APP_API}/create/secret_code/api/v1`, {
         uuid: uuid,
       })
-      .then(response => {
+      .then(async response => {
         // 성공적으로 요청을 처리한 경우
         console.log("getSecretCode", response.data);
         setSecretCode(response.data);
+        await Storage.setItem("secretCode", response.data);
       })
       .catch(async error => {
         // 요청 처리 중에 오류가 발생한 경우
@@ -109,6 +122,13 @@ function Setting({ route }) {
         onValueChange={newValue => setCheckState(newValue)}
       />
     );
+  };
+
+  const [codeViewWidth, setCodeViewWidth] = useState<number>(0);
+  const handleLayout = event => {
+    const { width } = event.nativeEvent.layout;
+    console.log(width);
+    setCodeViewWidth(width);
   };
 
   return (
@@ -196,13 +216,9 @@ function Setting({ route }) {
           <View
             style={{
               position: "absolute",
-              top: Platform.select({ ios: 0, android: 4 }),
-              right: Platform.select(
-                !isEmptyDescription(secretCode)
-                  ? { ios: 182, android: 4 }
-                  : { ios: 162, android: 4 }
-              ),
-              // right: Platform.select({ ios: 162, android: 4 }),
+              top: 0,
+              left: codeViewWidth + 8,
+              flexDirection: "row",
             }}
           >
             <Image
@@ -216,14 +232,39 @@ function Setting({ route }) {
             <Text
               style={{
                 transform: [{ rotate: "10deg" }],
-                top: Platform.select({ ios: -18, android: 4 }),
-                right: Platform.select({ ios: -25, android: 4 }),
+                left: 5,
+                fontSize: 14,
               }}
             >
               {!isEmptyDescription(secretCode) ? "click!" : secretCode}
             </Text>
+            {isEmptyDescription(secretCode) && (
+              <Pressable
+                onPress={async () => {
+                  await Share.share({
+                    // message:
+                    //   "누군가의 시크릿 코드를 받았어요. \n시크릿 메시지를 보내보세요.",
+                    message: `https://haewooso.web.app?secret_code=${secretCode}`,
+                  });
+                }}
+                style={{
+                  transform: [{ rotate: "13deg" }],
+                  left: 5,
+                  top: 7,
+                }}
+              >
+                <SvgIcon
+                  name="share"
+                  width={15}
+                  height={15}
+                  stroke={"#222222"}
+                  strokeWidth={1.5}
+                />
+              </Pressable>
+            )}
           </View>
           <Pressable
+            onLayout={handleLayout}
             onPressIn={() => {
               taptic();
             }}
@@ -240,7 +281,11 @@ function Setting({ route }) {
               paddingLeft: 20,
             }}
           >
-            <Text>시크릿 코드 발급 받기</Text>
+            <Text>
+              {!isEmptyDescription(secretCode)
+                ? "시크릿 코드 발급 받기"
+                : "시크릿 코드 재발급 받기"}
+            </Text>
           </Pressable>
         </View>
       </View>
