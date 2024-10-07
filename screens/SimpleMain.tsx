@@ -4,6 +4,7 @@ import {
   AppStateStatus,
   Button,
   Image,
+  Linking,
   Platform,
   Pressable,
   Text,
@@ -55,6 +56,7 @@ function Main() {
   // TODO: 모달 온오프 함수
   const pushOnModal = async () => {
     const isPushState = await requestUserPermission();
+    // const isPushState = true;
     if (!isPushState) {
       setPushModalVisible(true);
     }
@@ -63,7 +65,7 @@ function Main() {
   // TODO: 유저 접속 시간 로직 추가
   const handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (
-      appState.current.match(/inactive|background/) &&
+      // appState.current.match(/inactive|background/) &&
       nextAppState === "active"
     ) {
       console.log("foreground 전환");
@@ -103,7 +105,39 @@ function Main() {
     );
 
     pushOnOffCheck();
+
+    Linking.getInitialURL() // 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음
+      .then(async value => {
+        const url = value ? value : "https://haewooso.web.app/";
+        const secretCode = url?.split("haewooso://params/?secret_code=")?.[1];
+
+        if (secretCode) {
+          navigation.navigate("StackModal", {
+            screen: "PushScreen",
+            params: { secretCode: secretCode },
+            animation: "fade",
+          });
+        }
+      });
+
+    const urlListener = Linking.addEventListener("url", async e => {
+      // 앱이 실행되어있는 상태에서 요청이 왔을 때 처리하는 이벤트 등록
+      const value = e.url;
+
+      const url = value ? value : "https://haewooso.web.app/";
+      const secretCode = url?.split("haewooso://params/?secret_code=")?.[1];
+
+      if (secretCode) {
+        navigation.navigate("StackModal", {
+          screen: "PushScreen",
+          params: { secretCode: secretCode },
+          animation: "fade",
+        });
+      }
+    });
+
     return () => {
+      urlListener.remove();
       appStateListener.remove();
     };
   }, []);
@@ -241,8 +275,8 @@ function Main() {
             <View
               style={{
                 position: "absolute",
-                top: Platform.select({ ios: 26, android: 4 }),
-                right: Platform.select({ ios: -10, android: 4 }),
+                top: Platform.select({ ios: 26, android: 26 }),
+                right: Platform.select({ ios: -10, android: -10 }),
               }}
             >
               <Image
@@ -256,8 +290,8 @@ function Main() {
               <Text
                 style={{
                   transform: [{ rotate: "10deg" }],
-                  top: Platform.select({ ios: -18, android: 4 }),
-                  right: Platform.select({ ios: -25, android: 4 }),
+                  top: Platform.select({ ios: -18, android: -18 }),
+                  right: Platform.select({ ios: -25, android: -25 }),
                 }}
               >
                 click!

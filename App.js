@@ -23,7 +23,6 @@ import { Storage } from './src/util/storage';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import messaging from '@react-native-firebase/messaging';
-import notifee from '@notifee/react-native';
 import { toastConfig } from './src/util/toastMsg';
 import { v4 as uuidv4 } from "uuid";
 
@@ -38,21 +37,41 @@ export const onPressMoveSystemSetting = () => {
  * 알림 설정 체크
  * @returns 
  */
+let hasRequestedPermission = false; // 권한 요청 여부를 저장하는 플래그
+
 export async function requestUserPermission() {
-  let enabled
-  if(Platform.OS === 'ios') {
+  let enabled = false;
+
+  if (Platform.OS === 'ios') {
     const authStatus = await messaging().requestPermission();
-    
+
     enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    
-    return enabled ? true : false;
+              authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    return enabled;
   } else {
-    enabled = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-    );
+    // 권한이 이미 부여되었는지 체크
+    const permissionStatus = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+
+    if (!permissionStatus) {
+      // 권한이 부여되지 않은 경우에만 요청
+      if (!hasRequestedPermission) {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+
+        console.log(`안드로이드 권한 요청 결과: ${granted}`);
+        enabled = granted === PermissionsAndroid.RESULTS.GRANTED;
+        hasRequestedPermission = true; // 권한 요청 완료 플래그 설정
+      }
+      enabled = false
+    } else {
+      enabled = true; // 권한이 이미 부여된 경우
+    }
+
+    console.log(`권한 허용 여부: ${enabled}`);
+    return enabled;
   }
-  return enabled ? true : false;
 }
 
 async function getUUID() {
@@ -61,7 +80,7 @@ async function getUUID() {
     await Storage.setItem('uuid', uuidv4());
   } else {
     // uuid가 있으면 접속일자 업데이트
-    updateDate(uuid)
+    updateDate()
   }
 }
 
@@ -110,6 +129,7 @@ export const updateDate = async () => {
 
   // API 호출
   try {
+    
     const response = await axios.patch(`${HW_URL.APP_API}/member/v1/update_connect_date`, {
       uuid: uuid
     });
@@ -166,24 +186,13 @@ export default function App() {
   useEffect(() => {
     const initialize = async () => {
       await Storage.setItem("setting", false)
-      await requestUserPermission();
       await getUUID();
       await getFcmToken();
       scheduleFCMTokenRefresh();
+      await requestUserPermission();
     };
 
     initialize();
-
-    // const subscribeToMessages = messaging().onMessage(
-    //   async (remoteMessage) => {
-    //     console.log('App.js: ', remoteMessage)
-    //     const { title, body } = remoteMessage?.notification || {};
-    //     // 포그라운드 메시지
-    //     // await onDisplayNotification({ title, body });
-    //   }
-    // );
-
-    // return () => subscribeToMessages();
   }, []);
 
   if (Platform.OS === 'ios') StatusBar.setBarStyle('dark-content', true);

@@ -83,7 +83,7 @@ function Setting({ route }) {
   };
 
   const CustomCheckBox = ({ checkState, setCheckState, callback }) => {
-    return Platform.OS === "ios" ? (
+    return (
       <View>
         <Pressable
           style={{
@@ -113,14 +113,6 @@ function Setting({ route }) {
           )}
         </Pressable>
       </View>
-    ) : (
-      <CheckBox
-        style={{ transform: [{ scale: 0.8 }] }}
-        tintColors={{ true: "black", false: "black" }}
-        disabled={false}
-        value={checkState}
-        onValueChange={newValue => setCheckState(newValue)}
-      />
     );
   };
 
@@ -159,7 +151,7 @@ function Setting({ route }) {
         <View
           style={{
             marginTop: 30,
-            marginBottom: Platform.select({ ios: 10, android: 3 }),
+            marginBottom: Platform.select({ ios: 10, android: 10 }),
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 13 }}>
@@ -182,6 +174,8 @@ function Setting({ route }) {
             style={{
               textAlignVertical: "center",
               fontSize: Platform.select({ ios: 14, android: 13 }),
+              position: "relative",
+              top: Platform.select({ ios: 0, android: -2 }),
             }}
           >
             푸시 알림을 받을래요.
@@ -197,7 +191,10 @@ function Setting({ route }) {
         >
           <Text style={{ fontWeight: "bold", fontSize: 13 }}>시크릿 코드</Text>
           <Pressable
-            style={{ position: "relative", top: -1 }}
+            style={{
+              position: "relative",
+              top: Platform.select({ ios: -1, android: 1 }),
+            }}
             onPress={() => {
               setInfoModalVisible(true);
             }}
@@ -273,6 +270,7 @@ function Setting({ route }) {
               await getSecretCode();
             }}
             style={{
+              marginTop: Platform.select({ android: 10, ios: 0 }),
               borderRadius: 4,
               borderWidth: 1,
               paddingTop: 10,
@@ -281,7 +279,12 @@ function Setting({ route }) {
               paddingLeft: 20,
             }}
           >
-            <Text>
+            <Text
+              style={{
+                position: "relative",
+                top: Platform.select({ android: -3 }),
+              }}
+            >
               {!isEmptyDescription(secretCode)
                 ? "시크릿 코드 발급 받기"
                 : "시크릿 코드 재발급 받기"}

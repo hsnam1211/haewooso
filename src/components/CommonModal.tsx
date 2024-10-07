@@ -65,9 +65,6 @@ function CommonModal({
                 width: 0,
               },
             },
-            android: {
-              elevation: 3,
-            },
           }),
         }}
       >
@@ -80,6 +77,11 @@ function CommonModal({
             borderWidth: 0.5,
             borderColor: "#413d34",
             backgroundColor: "#FBF9F4",
+            ...Platform.select({
+              android: {
+                elevation: 3,
+              },
+            }),
           }}
         >
           <View style={{ padding: 14 }}>
@@ -102,13 +104,27 @@ function CommonModal({
                 borderColor: "#413d34",
               }}
             >
-              <Text>{closeText ? closeText : "아니요"}</Text>
+              <Text
+                style={{
+                  position: "relative",
+                  top: Platform.select({ android: -3 }),
+                }}
+              >
+                {closeText ? closeText : "아니요"}
+              </Text>
             </Pressable>
             <Pressable
               onPress={handleConfirm}
               style={{ padding: 14, width: "50%", alignItems: "center" }}
             >
-              <Text>{confirmText ? confirmText : "네, 전달할래요"}</Text>
+              <Text
+                style={{
+                  position: "relative",
+                  top: Platform.select({ android: -3 }),
+                }}
+              >
+                {confirmText ? confirmText : "네, 전달할래요"}
+              </Text>
             </Pressable>
           </View>
         </View>
