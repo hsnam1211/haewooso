@@ -290,3 +290,5 @@ project.xcworkspace
 
 package-lock.json
 # End of https://www.toptal.com/developers/gitignore/api/reactnative
+
+src/res/env.tsx

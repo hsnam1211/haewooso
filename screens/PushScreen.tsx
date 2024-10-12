@@ -34,12 +34,11 @@ import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
 
-export const isEmptyDescription = text => {
+export const isEmptyDescription = (text) => {
   return !(!text || text.trim().length === 0);
 };
 
 function PushScreen({ route }: any) {
-  console.log(route?.params);
   const navigation = useNavigation();
   const [receiveCheck, setReceiveCheck] = useState(true);
   const [secretCodeCheck, setSecretCodeCheck] = useState(false);
@@ -55,7 +54,7 @@ function PushScreen({ route }: any) {
     }
   }, []);
 
-  const truncateDescription = description => {
+  const truncateDescription = (description) => {
     if (description.length > 15) {
       return description.slice(0, 15) + "...";
     } else {
@@ -63,7 +62,7 @@ function PushScreen({ route }: any) {
     }
   };
 
-  const handleTextChange = inputText => {
+  const handleTextChange = (inputText) => {
     if (
       getNumberOfLines(inputText) <= maxLines &&
       inputText.length <= maxLength
@@ -71,11 +70,11 @@ function PushScreen({ route }: any) {
       setDescription(inputText);
     }
   };
-  const handleSecretCodeChange = inputText => {
+  const handleSecretCodeChange = (inputText) => {
     setSecretCode(inputText);
   };
 
-  const getNumberOfLines = text => {
+  const getNumberOfLines = (text) => {
     return text.split("\n").length;
   };
 
@@ -97,13 +96,13 @@ function PushScreen({ route }: any) {
     console.log(config);
     axios
       .post(`${HW_URL.APP_API}${endPoint}`, config)
-      .then(response => {
+      .then((response) => {
         // 성공적으로 요청을 처리한 경우
         console.log(response.data);
-        setNumber(p => p - 1);
+        setNumber((p) => p - 1);
         navigation.goBack();
       })
-      .catch(error => {
+      .catch((error) => {
         // 요청 처리 중에 오류가 발생한 경우
         console.log(`${error} /push/api/v1`);
       });
@@ -123,7 +122,7 @@ function PushScreen({ route }: any) {
         lineWidth={1}
         disabled={false}
         value={checkState}
-        onValueChange={newValue => setCheckState(newValue)}
+        onValueChange={(newValue) => setCheckState(newValue)}
         style={{ width: 14, height: 14, marginRight: 7 }}
       />
     ) : (
@@ -132,7 +131,7 @@ function PushScreen({ route }: any) {
         tintColors={{ true: "black", false: "black" }}
         disabled={false}
         value={checkState}
-        onValueChange={newValue => setCheckState(newValue)}
+        onValueChange={(newValue) => setCheckState(newValue)}
       />
     );
   };

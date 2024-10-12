@@ -81,7 +81,7 @@ function DetailMessage({ route }) {
               <View
                 style={{
                   backgroundColor:
-                    data.reply_yn === "N" ? "#a83f39" : "#2A2322",
+                    data?.secretAt === "S" ? "#2A2322" : "#a83f39",
                   marginHorizontal: 2,
                   paddingLeft: 8,
                   paddingRight: 8,
@@ -90,14 +90,14 @@ function DetailMessage({ route }) {
                   borderRadius: 4,
                 }}
               >
-                {data.reply_yn === "N" ? (
+                {data?.secretAt === "S" ? (
                   <Text
                     style={{
                       fontSize: Platform.select({ ios: 12, android: 11 }),
                       color: "#ffffff",
                     }}
                   >
-                    전송 불가
+                    메시지 전송 가능
                   </Text>
                 ) : (
                   <Text
@@ -106,7 +106,7 @@ function DetailMessage({ route }) {
                       color: "#ffffff",
                     }}
                   >
-                    메시지 전송 가능
+                    메시지 전송 불가
                   </Text>
                 )}
               </View>
@@ -181,65 +181,67 @@ function DetailMessage({ route }) {
                 }}
               >
                 {/* 본문 */}
-                {data.description}
+                {data.content}
               </Text>
             </View>
           </View>
         </View>
 
-        <Pressable
-          onPressIn={() => {
-            taptic();
-          }}
-          onPressOut={() => {
-            taptic();
-            navigation.navigate("StackModal", {
-              screen: "PushScreen",
-              params: { secretCode: "asdasdasdasdasdasd" },
-              animation: "fade",
-            });
-            // if (number >= 1) {
-            //   navigation.navigate("StackModal", {
-            //     screen: "PushScreen",
-            //     animation: "fade",
-            //   });
-            //   setNumber(p => p - 1);
-            // } else {
-            //   adAlert();
-            // }
-          }}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 50,
-            width: 64,
-            height: 64,
-            position: "absolute",
-            bottom: 40,
-            right: 40,
-            backgroundColor: "#FBF9F4",
-            borderWidth: 0.5,
-            borderColor: "#000000",
-          }}
-        >
-          <SvgIcon
-            name="haewoosoLogo"
-            fill="#000000"
-            stroke="#ffffff"
-            strokeWidth="1.5"
-            size={30}
-            style={{ zIndex: 100 }}
-          />
-          <Text
+        {data?.secretAt === "S" && (
+          <Pressable
+            onPressIn={() => {
+              taptic();
+            }}
+            onPressOut={() => {
+              taptic();
+              navigation.navigate("StackModal", {
+                screen: "PushScreen",
+                params: { secretCode: data?.secretCode },
+                animation: "fade",
+              });
+              // if (number >= 1) {
+              //   navigation.navigate("StackModal", {
+              //     screen: "PushScreen",
+              //     animation: "fade",
+              //   });
+              //   setNumber(p => p - 1);
+              // } else {
+              //   adAlert();
+              // }
+            }}
             style={{
-              fontSize: Platform.select({ ios: 11, android: 10 }),
-              marginTop: 3,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 50,
+              width: 64,
+              height: 64,
+              position: "absolute",
+              bottom: 40,
+              right: 40,
+              backgroundColor: "#FBF9F4",
+              borderWidth: 0.5,
+              borderColor: "#000000",
             }}
           >
-            {/* {type ? "답장하기" : `(${number}/5)`} */}
-            답장하기
-          </Text>
-        </Pressable>
+            <SvgIcon
+              name="haewoosoLogo"
+              fill="#000000"
+              stroke="#ffffff"
+              strokeWidth="1.5"
+              size={30}
+              style={{ zIndex: 100 }}
+            />
+            <Text
+              style={{
+                fontSize: Platform.select({ ios: 11, android: 10 }),
+                marginTop: 3,
+              }}
+            >
+              {/* {type ? "답장하기" : `(${number}/5)`} */}
+              답장하기
+            </Text>
+          </Pressable>
+        )}
       </View>
     </>
   );

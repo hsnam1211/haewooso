@@ -23,7 +23,8 @@ export const MessageButton = () => {
             borderRadius: 4,
             justifyContent: "center",
             borderWidth: 1,
-            borderColor: "rgba(60, 50, 48, 0.2)",
+            // borderColor: "rgba(60, 50, 48, 0.2)",
+            borderColor: "#2a2322",
           }}
           onPressIn={() => {
             taptic();
@@ -38,7 +39,8 @@ export const MessageButton = () => {
         >
           <Text
             style={{
-              color: "rgba(60, 50, 48, 0.6)",
+              // color: "rgba(60, 50, 48, 0.6)",
+              color: "#2a2322",
               textAlign: "center",
               paddingLeft: 15,
               paddingRight: 15,
@@ -48,7 +50,7 @@ export const MessageButton = () => {
               fontWeight: "bold",
             }}
           >
-            💩 익명의 누군가에게 나의 근심 보내기
+            익명의 누군가에게 나의 근심 보내기
           </Text>
         </Pressable>
       </View>

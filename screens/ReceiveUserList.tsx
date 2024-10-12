@@ -21,8 +21,8 @@ import DeviceInfo from "react-native-device-info";
 
 import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
-import { HW_URL } from "../src/res/env";
 import axios from "axios";
+import { HW_URL } from "../src/res/env";
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -92,49 +92,38 @@ const data = [
   },
 ];
 
-function ReceiveMsg({ route }) {
-  const { title, uuid } = route.params; // params에서 title과 message 추출
-  const navigation = useNavigation();
+function ReceiveUserList() {
+  const [senderList, setSenderList] = useState<any>([]);
+  const navigation = useNavigation<any>();
 
-  const [messageList, setMessageList] = useState<any>([]);
+  const flatListRef = useRef(null);
 
-  const getMessageList = async () => {
+  const getSenderList = async () => {
     // API 호출
     try {
       const response = await axios.get(
-        `${HW_URL.APP_API}/board/get_receive_message_info/api/v1/${uuid}`
+        `${HW_URL.APP_API}/board/get_send_me_uuid/api/v1`
       );
       console.log(
-        "getMessageList",
-        `메시지 리스트 가져오기 성공 ${response.data}`
+        "getSenderList",
+        `메시지 보낸 사람 리스트 가져오기 성공 ${response.data}`
       );
 
-      setMessageList(response?.data);
+      setSenderList(response?.data);
     } catch (error) {
       console.error("API 호출 실패", error);
-      console.error("/board/get_receive_message_info/api/v1/${uuid}");
+      console.error("/board/get_send_me_uuid/api/v1");
     }
   };
 
   useEffect(() => {
-    getMessageList();
+    getSenderList();
   }, []);
 
-  const flatListRef = useRef(null);
-
-  const scrollY = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    // 헤더의 title을 유동적으로 설정
-    navigation.setOptions({ headerTitle: title });
-  }, [title, navigation]);
-
   const renderItem = ({ item, index }) => {
+    const name = `익명${item.slice(0, 4)}`;
     return (
       <>
-        {/* {index === 0 &&
-          <MidSection />
-        } */}
         <Pressable
           style={{
             padding: 14,
@@ -147,117 +136,22 @@ function ReceiveMsg({ route }) {
           }}
           onPress={() => {
             taptic();
-            // setType((p) => !p)
             navigation.navigate("StackCard", {
-              screen: "DetailMessage",
-              params: [item, "target"],
+              screen: "ReceiveMsg",
+              params: {
+                title: `${name} 님이 보낸 근심`, // title을 포함
+                uuid: item,
+              },
             });
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-              marginBottom: 10,
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <View
-                style={{
-                  backgroundColor:
-                    item.reply_yn === "N" ? "#a83f39" : "#2A2322",
-                  marginHorizontal: 2,
-                  paddingLeft: 8,
-                  paddingRight: 8,
-                  paddingTop: 3,
-                  paddingBottom: 3,
-                  borderRadius: 4,
-                }}
-              >
-                {item.reply_yn === "N" ? (
-                  <Text
-                    style={{
-                      fontSize: Platform.select({ ios: 12, android: 11 }),
-                      color: "#ffffff",
-                    }}
-                  >
-                    열람 불가
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: Platform.select({ ios: 12, android: 11 }),
-                      color: "#ffffff",
-                    }}
-                  >
-                    열람 가능
-                  </Text>
-                )}
-              </View>
-              {item?.secretAt === "S" && (
-                <View
-                  style={{
-                    backgroundColor:
-                      item?.secretAt === "S" ? "#a83f39" : "#2A2322",
-                    marginHorizontal: 2,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 3,
-                    paddingBottom: 3,
-                    borderRadius: 4,
-                  }}
-                >
-                  {
-                    <Text
-                      style={{
-                        fontSize: Platform.select({ ios: 12, android: 11 }),
-                        color: "#ffffff",
-                      }}
-                    >
-                      시크릿
-                    </Text>
-                  }
-                </View>
-              )}
-            </View>
-          </View>
-          <View style={{ position: "relative", marginTop: 8 }}>
-            <View
-              style={{
-                borderRadius: 3,
-                backgroundColor: "#ffffff",
-                padding: 10,
-                zIndex: 1,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#413d34",
-                  fontWeight: "bold",
-                  fontSize: Platform.select({ ios: 14, android: 13 }),
-                }}
-              >
-                {item?.secretAt === "S"
-                  ? "비밀인데요.. 눌러서 확인해보세요."
-                  : item?.content}
-              </Text>
-            </View>
+          <View style={{ position: "relative" }}>
+            <Text>{`${name} 님이 보낸 근심 확인하기`}</Text>
           </View>
         </Pressable>
       </>
     );
   };
-
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-    {
-      useNativeDriver: false,
-      listener: (event) => {
-        const currentScrollY = event.nativeEvent.contentOffset.y;
-      },
-    }
-  );
 
   return (
     <>
@@ -269,6 +163,7 @@ function ReceiveMsg({ route }) {
           alignItems: "center",
           // paddingTop:
           //   Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 52 : 0) : 0,
+          paddingTop: 10,
           paddingBottom: 20,
           // marginBottom:
           //   Platform.OS === 'ios' ? (DeviceInfo.hasNotch() ? 92 : 70) : 70,
@@ -277,13 +172,12 @@ function ReceiveMsg({ route }) {
         <Container>
           <FlatList
             ref={flatListRef}
-            data={messageList}
+            data={senderList}
             renderItem={renderItem}
             keyExtractor={(item, index) => item.title + index}
             showsVerticalScrollIndicator={false}
-            onScroll={handleScroll}
             scrollEventThrottle={5}
-            extraData={messageList}
+            extraData={senderList}
           />
         </Container>
       </View>
@@ -291,4 +185,4 @@ function ReceiveMsg({ route }) {
   );
 }
 
-export default ReceiveMsg;
+export default ReceiveUserList;

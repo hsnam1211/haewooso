@@ -18,7 +18,7 @@ import StickyHeaderExample from "../screens/StickyHeaderExample";
 import SvgIcon from "../src/components/SvgIcon";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useRecoilState } from "recoil";
-import ReceiveMsg from "../screens/ReceiveMsg";
+import ReceiveUserList from "../screens/ReceiveUserList";
 
 const Tab = createBottomTabNavigator();
 
@@ -85,10 +85,10 @@ function Tabs() {
         // }}
       />
       <Tab.Screen
-        name="메시지함"
-        component={ReceiveMsg}
+        name="근심함"
+        component={ReceiveUserList}
         options={{
-          tabBarLabel: "메시지함",
+          tabBarLabel: "근심함",
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <View>
