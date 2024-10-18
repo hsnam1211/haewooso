@@ -100,10 +100,9 @@ function ReceiveUserList() {
 
   const getSenderList = async () => {
     // API 호출
+    const endPoint = "/board/v1/uuids";
     try {
-      const response = await axios.get(
-        `${HW_URL.APP_API}/board/get_send_me_uuid/api/v1`
-      );
+      const response = await axios.get(`${HW_URL.APP_API}${endPoint}`);
       console.log(
         "getSenderList",
         `메시지 보낸 사람 리스트 가져오기 성공 ${response.data}`
@@ -112,7 +111,7 @@ function ReceiveUserList() {
       setSenderList(response?.data);
     } catch (error) {
       console.error("API 호출 실패", error);
-      console.error("/board/get_send_me_uuid/api/v1");
+      console.error(endPoint);
     }
   };
 

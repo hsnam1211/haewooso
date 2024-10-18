@@ -65,20 +65,21 @@ function Setting({ route }) {
 
   const getSecretCode = async () => {
     const uuid = await Storage.getItem("uuid");
+    const endPoint = "/secret/v1/secret-code";
     axios
-      .post(`${HW_URL.APP_API}/create/secret_code/api/v1`, {
+      .post(`${HW_URL.APP_API}${endPoint}`, {
         uuid: uuid,
       })
-      .then(async response => {
+      .then(async (response) => {
         // 성공적으로 요청을 처리한 경우
         console.log("getSecretCode", response.data);
         setSecretCode(response.data);
         await Storage.setItem("secretCode", response.data);
       })
-      .catch(async error => {
+      .catch(async (error) => {
         // 요청 처리 중에 오류가 발생한 경우
         console.error(error);
-        console.error("/create/secret_code/api/v1");
+        console.error(endPoint);
       });
   };
 
@@ -101,7 +102,7 @@ function Setting({ route }) {
                 onPressMoveSystemSetting();
                 return;
               }
-              setCheckState(prev => !prev);
+              setCheckState((prev) => !prev);
               return;
             }
 
@@ -117,7 +118,7 @@ function Setting({ route }) {
   };
 
   const [codeViewWidth, setCodeViewWidth] = useState<number>(0);
-  const handleLayout = event => {
+  const handleLayout = (event) => {
     const { width } = event.nativeEvent.layout;
     console.log(width);
     setCodeViewWidth(width);

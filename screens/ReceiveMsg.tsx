@@ -100,10 +100,9 @@ function ReceiveMsg({ route }) {
 
   const getMessageList = async () => {
     // API 호출
+    const endPoint = "/board/v1/messages-info/";
     try {
-      const response = await axios.get(
-        `${HW_URL.APP_API}/board/get_receive_message_info/api/v1/${uuid}`
-      );
+      const response = await axios.get(`${HW_URL.APP_API}${endPoint}${uuid}`);
       console.log(
         "getMessageList",
         `메시지 리스트 가져오기 성공 ${response.data}`
@@ -112,7 +111,7 @@ function ReceiveMsg({ route }) {
       setMessageList(response?.data);
     } catch (error) {
       console.error("API 호출 실패", error);
-      console.error("/board/get_receive_message_info/api/v1/${uuid}");
+      console.error(endPoint);
     }
   };
 
