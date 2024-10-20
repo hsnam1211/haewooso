@@ -112,6 +112,10 @@ function Main() {
         const secretCode = url?.split("haewooso://params/?secret_code=")?.[1];
 
         if (secretCode) {
+          navigation.navigate("Tabs", {
+            screen: "Main",
+            animation: "fade",
+          });
           navigation.navigate("StackModal", {
             screen: "PushScreen",
             params: { secretCode: secretCode },
@@ -128,6 +132,10 @@ function Main() {
       const secretCode = url?.split("haewooso://params/?secret_code=")?.[1];
 
       if (secretCode) {
+        navigation.navigate("Tabs", {
+          screen: "Main",
+          animation: "fade",
+        });
         navigation.navigate("StackModal", {
           screen: "PushScreen",
           params: { secretCode: secretCode },

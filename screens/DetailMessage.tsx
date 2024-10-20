@@ -63,7 +63,7 @@ function DetailMessage({ route }) {
           style={{
             backgroundColor: "#FBF9F4",
             flex: 1,
-            paddingTop: Platform.select({ ios: 70, android: 30 }),
+            // paddingTop: Platform.select({ ios: 70, android: 30 }),
             alignItems: "center",
             paddingRight: 20,
             paddingLeft: 20,

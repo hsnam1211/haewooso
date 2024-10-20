@@ -144,8 +144,33 @@ function Setting({ route }) {
           setInfoModalVisible(false);
         }}
       >
-        <View>
-          <Text>안녕하세요?</Text>
+        <View style={{ marginBottom: 10 }}>
+          <Text style={{ fontWeight: "600", marginBottom: 10 }}>
+            시크릿 코드는요..
+          </Text>
+          <Text>
+            시크릿 코드를 친구에게 공유하고, 친구와 비밀 메시지를 주고
+            받아보세요.
+          </Text>
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 4,
+              borderColor: "gray",
+              marginTop: 15,
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{ marginBottom: 4, color: "gray" }}
+            >{`1. 시크릿 코드를 발급 받으세요.`}</Text>
+            <Text style={{ marginBottom: 4, color: "gray" }}>
+              {`2. 발급된 시크릿 코드의 오른쪽에 위치한 공유 아이콘을 누르세요.`}
+            </Text>
+            <Text style={{ color: "gray" }}>
+              {`3. 카카오톡 또는 메시지로 친구에게 공유하세요.`}
+            </Text>
+          </View>
         </View>
       </InfoModal>
       <View style={{ flex: 1, backgroundColor: "#FBF9F4", paddingLeft: 12 }}>

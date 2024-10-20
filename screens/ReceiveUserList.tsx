@@ -95,12 +95,13 @@ const data = [
 function ReceiveUserList() {
   const [senderList, setSenderList] = useState<any>([]);
   const navigation = useNavigation<any>();
-
+  const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef(null);
 
   const getSenderList = async () => {
-    // API 호출
     const endPoint = "/board/v1/uuids";
+    setRefreshing(true); // 새로고침 시작
+
     try {
       const response = await axios.get(`${HW_URL.APP_API}${endPoint}`);
       console.log(
@@ -112,6 +113,8 @@ function ReceiveUserList() {
     } catch (error) {
       console.error("API 호출 실패", error);
       console.error(endPoint);
+    } finally {
+      setRefreshing(false); // 새로고침 종료
     }
   };
 
@@ -177,6 +180,8 @@ function ReceiveUserList() {
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={5}
             extraData={senderList}
+            refreshing={refreshing} // 새로고침 상태
+            onRefresh={getSenderList} // 새로고침 함수
           />
         </Container>
       </View>

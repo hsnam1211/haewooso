@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import Transparent from "../assets/transparent.png";
 import ArrowClick from "../assets/arrowClick.png";
@@ -96,28 +97,45 @@ function ReceiveMsg({ route }) {
   const { title, uuid } = route.params; // params에서 title과 message 추출
   const navigation = useNavigation();
 
-  const [messageList, setMessageList] = useState<any>([]);
+  const [params, setParams] = useState<any>({
+    page: 0,
+    size: 10,
+  });
+
+  const [messageList, setMessageList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
 
   const getMessageList = async () => {
-    // API 호출
+    if (loading) return; // 로딩 중이면 종료
+
+    setLoading(true);
     const endPoint = "/board/v1/messages-info/";
+
     try {
-      const response = await axios.get(`${HW_URL.APP_API}${endPoint}${uuid}`);
+      const response = await axios.get(
+        `${HW_URL.APP_API}${endPoint}${uuid}?page=${params.page}&size=${params.size}`
+      );
       console.log(
         "getMessageList",
         `메시지 리스트 가져오기 성공 ${response.data}`
       );
 
-      setMessageList(response?.data);
+      // 메시지 리스트 업데이트
+      setMessageList((prev) => [...prev, ...response.data.content]);
+      setTotalPages(response.data.page.totalPages - 1); // 총 페이지 수 업데이트
     } catch (error) {
       console.error("API 호출 실패", error);
-      console.error(endPoint);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    console.log(params);
     getMessageList();
-  }, []);
+  }, [params.page]);
 
   const flatListRef = useRef(null);
 
@@ -278,10 +296,18 @@ function ReceiveMsg({ route }) {
             ref={flatListRef}
             data={messageList}
             renderItem={renderItem}
-            keyExtractor={(item, index) => item.title + index}
+            keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
-            onScroll={handleScroll}
-            scrollEventThrottle={5}
+            onEndReached={() => {
+              if (params.page < totalPages) {
+                // 총 페이지 수보다 작을 때만 요청
+                setParams((prev) => ({ ...prev, page: prev.page + 1 }));
+              }
+            }}
+            onEndReachedThreshold={0.3}
+            ListFooterComponent={
+              loading ? <ActivityIndicator size="large" /> : null
+            }
             extraData={messageList}
           />
         </Container>

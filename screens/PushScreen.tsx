@@ -1,6 +1,7 @@
 import * as Animatable from "react-native-animatable";
 
 import {
+  ActivityIndicator,
   Animated,
   Dimensions,
   Image,
@@ -45,6 +46,7 @@ function PushScreen({ route }: any) {
   const [number, setNumber] = useRecoilState(sendMessageCount);
   const [description, setDescription] = useState("");
   const [secretCode, setSecretCode] = useState(route?.params?.secretCode);
+  const [loading, setLoading] = useState(false);
   const maxLength = 100;
   const maxLines = 10;
 
@@ -84,8 +86,8 @@ function PushScreen({ route }: any) {
     // axios 호출
     // TODO: 시크릿 코드 유무에 따라서 End Point 분기
     const endPoint = isEmptyDescription(secretCode)
-      ? "/push/secret/api/v1"
-      : "/push/api/v1";
+      ? "/secret/v1/send"
+      : "/push/v1/send";
     const config = {
       sendUuid: await Storage.getItem("uuid"),
       title: "해우소에서 온 메시지",
@@ -94,17 +96,25 @@ function PushScreen({ route }: any) {
     };
 
     console.log(config);
+
     axios
       .post(`${HW_URL.APP_API}${endPoint}`, config)
       .then((response) => {
         // 성공적으로 요청을 처리한 경우
+        console.log(`${HW_URL.APP_API}${endPoint}`);
         console.log(response.data);
         setNumber((p) => p - 1);
+        if (response.data === 200) {
+        } else {
+        }
         navigation.goBack();
       })
       .catch((error) => {
         // 요청 처리 중에 오류가 발생한 경우
-        console.log(`${error} /push/api/v1`);
+        console.log(`${error} ${endPoint}`);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -138,6 +148,21 @@ function PushScreen({ route }: any) {
 
   return (
     <>
+      {loading && (
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      )}
       <CommonModal
         title="새로 날아온 근심"
         description="익명의 누군가에게 근심을 전달하시겠습니까?"

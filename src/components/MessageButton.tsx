@@ -23,7 +23,6 @@ export const MessageButton = () => {
             borderRadius: 4,
             justifyContent: "center",
             borderWidth: 1,
-            // borderColor: "rgba(60, 50, 48, 0.2)",
             borderColor: "#2a2322",
           }}
           onPressIn={() => {
@@ -39,7 +38,6 @@ export const MessageButton = () => {
         >
           <Text
             style={{
-              // color: "rgba(60, 50, 48, 0.6)",
               color: "#2a2322",
               textAlign: "center",
               paddingLeft: 15,

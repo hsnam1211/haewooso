@@ -115,13 +115,13 @@ async function getFcmToken() {
 }
 
 /** 유저 접속 시간 */
-export const updateDate = async () => {
+export const updateDate = async (retry) => {
   const uuid = await Storage.getItem("uuid");
   const lastUpdateDate = await Storage.getItem("lastUpdateDate");
   const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 오늘 날짜 가져오기
 
   // 오늘 날짜와 동일하면 API 호출하지 않음
-  if (lastUpdateDate === today) {
+  if (lastUpdateDate === today && !retry) {
     console.log("오늘 이미 업데이트됨");
     return;
   }
@@ -132,10 +132,17 @@ export const updateDate = async () => {
     const response = await axios.patch(`${HW_URL.APP_API}${endPoint}`, {
       uuid: uuid,
     });
-    console.log("updateDate", `유저 접속 시간 업데이트 성공 ${response.data}`);
+    if (response.data === 200) {
+      console.log(
+        "updateDate",
+        `유저 접속 시간 업데이트 성공 ${response.data}`
+      );
 
-    // 로컬 스토리지에 오늘 날짜로 업데이트
-    await Storage.setItem("lastUpdateDate", today);
+      // 로컬 스토리지에 오늘 날짜로 업데이트
+      await Storage.setItem("lastUpdateDate", today);
+    } else {
+      updateDate(true);
+    }
   } catch (error) {
     console.error("API 호출 실패", error);
     console.error(endPoint);
