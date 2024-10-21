@@ -3,9 +3,11 @@ import { Pressable, Text, View } from "react-native";
 import React from "react";
 import { taptic } from "../util/taptic";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 export const MessageButton = () => {
   const navigation = useNavigation<any>();
+
   return (
     <View>
       <View
@@ -44,11 +46,11 @@ export const MessageButton = () => {
               paddingRight: 15,
               paddingTop: 10,
               paddingBottom: 10,
-              fontSize: 12,
-              fontWeight: "bold",
+              fontSize: 14,
+              fontWeight: "600",
             }}
           >
-            익명의 누군가에게 나의 근심 보내기
+            익명의 누군가에게 나의 근심 보내보기
           </Text>
         </Pressable>
       </View>

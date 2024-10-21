@@ -32,3 +32,7 @@ export { default as labsLogo } from "../../assets/labsLogo.svg";
 export { default as haewoosoLogo } from "../../assets/haewoosoLogo.svg";
 export { default as close } from "../../assets/close.svg";
 export { default as share } from "../../assets/share.svg";
+export { default as email } from "../../assets/navigation/email.svg";
+export { default as toiletPaper } from "../../assets/navigation/toiletPaper.svg";
+export { default as gear } from "../../assets/navigation/gear.svg";
+export { default as toilet } from "../../assets/navigation/toilet.svg";

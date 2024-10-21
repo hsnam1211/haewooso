@@ -20,9 +20,10 @@ import { width, height } from "../src/util/screenDimensions";
 import DeviceInfo from "react-native-device-info";
 
 import { taptic } from "../src/util/taptic";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { HW_URL } from "../src/res/env";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 const Container = styled(View)`
   margin-right: 0px;
@@ -97,6 +98,7 @@ function ReceiveUserList() {
   const navigation = useNavigation<any>();
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef(null);
+  const isFocused = useIsFocused();
 
   const getSenderList = async () => {
     const endPoint = "/board/v1/uuids";
@@ -119,8 +121,8 @@ function ReceiveUserList() {
   };
 
   useEffect(() => {
-    getSenderList();
-  }, []);
+    if (isFocused) getSenderList();
+  }, [isFocused]);
 
   const renderItem = ({ item, index }) => {
     const name = `익명${item.slice(0, 4)}`;
@@ -129,8 +131,8 @@ function ReceiveUserList() {
         <Pressable
           style={{
             padding: 14,
-            width: width - 24,
-            marginTop: 7,
+            width: width - 40,
+            marginTop: 10,
             marginBottom: 7,
             borderRadius: 3,
             borderWidth: 0.5,
@@ -154,6 +156,32 @@ function ReceiveUserList() {
       </>
     );
   };
+  const headerHeight = useHeaderHeight(); // 현재 헤더의 높이를 가져옵니다.
+  const renderEmptyComponent = () => (
+    <View
+      style={{
+        flex: 1,
+        width: width,
+        height:
+          height -
+          (Platform.OS === "ios" ? (DeviceInfo.hasNotch() ? 92 : 70) : 70) -
+          headerHeight -
+          65,
+
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 16,
+          color: "gray",
+        }}
+      >
+        아직 받은 근심이 없어요.
+      </Text>
+    </View>
+  );
 
   return (
     <>
@@ -182,6 +210,7 @@ function ReceiveUserList() {
             extraData={senderList}
             refreshing={refreshing} // 새로고침 상태
             onRefresh={getSenderList} // 새로고침 함수
+            ListEmptyComponent={renderEmptyComponent} // 빈 상태 컴포넌트
           />
         </Container>
       </View>

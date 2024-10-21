@@ -127,16 +127,6 @@ function Main() {
     refetch: mainMsgListRefetch,
   } = useGetMsg();
 
-  const ToastHandle = (text, type) => {
-    Toast.show({
-      type: "tomatoToast",
-      position: "top",
-      visibilityTime: 4000,
-      text1: text,
-      onPress: handlePress,
-    });
-  };
-
   const handlePress = () => {
     taptic();
     Toast.hide();

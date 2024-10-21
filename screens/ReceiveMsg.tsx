@@ -115,7 +115,7 @@ function ReceiveMsg({ route }) {
 
     try {
       const response = await axios.get(
-        `${HW_URL.APP_API}${endPoint}${uuid}?page=${params.page}&size=${params.size}`
+        `${HW_URL.APP_API}${endPoint}${uuid}?page=${params.page}&size=${params.size}&sort=id,desc`
       );
       console.log(
         "getMessageList",
@@ -155,8 +155,8 @@ function ReceiveMsg({ route }) {
         <Pressable
           style={{
             padding: 14,
-            width: width - 24,
-            marginTop: 7,
+            width: width - 40,
+            marginTop: index === 0 ? 20 : 7,
             marginBottom: 7,
             borderRadius: 3,
             borderWidth: 0.5,

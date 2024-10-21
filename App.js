@@ -78,10 +78,8 @@ async function getUUID() {
   const uuid = await Storage.getItem("uuid");
   if (!uuid) {
     await Storage.setItem("uuid", uuidv4());
-  } else {
-    // uuid가 있으면 접속일자 업데이트
-    updateDate();
   }
+  await updateDate();
 }
 
 async function getFcmToken() {
@@ -121,10 +119,10 @@ export const updateDate = async (retry) => {
   const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 오늘 날짜 가져오기
 
   // 오늘 날짜와 동일하면 API 호출하지 않음
-  if (lastUpdateDate === today && !retry) {
-    console.log("오늘 이미 업데이트됨");
-    return;
-  }
+  // if (lastUpdateDate === today && !retry) {
+  //   console.log("오늘 이미 업데이트됨");
+  //   return;
+  // }
 
   // API 호출
   const endPoint = "/member/v1/last-connect-date";
@@ -140,8 +138,6 @@ export const updateDate = async (retry) => {
 
       // 로컬 스토리지에 오늘 날짜로 업데이트
       await Storage.setItem("lastUpdateDate", today);
-    } else {
-      updateDate(true);
     }
   } catch (error) {
     console.error("API 호출 실패", error);
@@ -213,9 +209,9 @@ export default function App() {
               <Root />
             </NavigationContainer>
           </RecoilRoot>
-          <Toast config={toastConfig} />
         </QueryClientProvider>
       </PaperProvider>
+      <Toast config={toastConfig} />
     </>
   );
 }

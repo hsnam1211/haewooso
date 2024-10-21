@@ -59,9 +59,13 @@ function Tabs() {
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return (
-              <View>
-                <Text>🚽</Text>
-              </View>
+              <SvgIcon
+                name="toiletPaper"
+                stroke={focused ? "#FBF9F4" : "#797979"}
+                fill={focused ? "#FBF9F4" : "#797979"}
+                strokeWidth={focused ? 10.5 : 2}
+                size={22}
+              />
             );
           },
           // headerRight: () =>
@@ -91,9 +95,13 @@ function Tabs() {
           tabBarLabel: "근심함",
           tabBarIcon: ({ focused, color, size }) => {
             return (
-              <View>
-                <Text>💌</Text>
-              </View>
+              <SvgIcon
+                name="email"
+                stroke={focused ? "#FBF9F4" : "#797979"}
+                fill={focused ? "#FBF9F4" : "#797979"}
+                strokeWidth={focused ? 10.5 : 2}
+                size={24}
+              />
             );
           },
           headerStyle: {
@@ -116,15 +124,13 @@ function Tabs() {
           tabBarLabel: "설정",
           tabBarIcon: ({ focused, color, size }) => {
             return (
-              // <SvgIcon
-              //   name="heart"
-              //   stroke={focused ? "#FBF9F4" : "#797979"}
-              //   strokeWidth={focused ? 2 : 1.5}
-              //   size={24}
-              // />
-              <View>
-                <Text>🙋🏻‍♂️</Text>
-              </View>
+              <SvgIcon
+                name="gear"
+                stroke={focused ? "#FBF9F4" : "#797979"}
+                fill={focused ? "#FBF9F4" : "#797979"}
+                strokeWidth={focused ? 10.5 : 2}
+                size={22}
+              />
             );
           },
           headerStyle: {

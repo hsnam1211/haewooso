@@ -129,7 +129,10 @@ function Main() {
       const value = e.url;
 
       const url = value ? value : "https://haewooso.web.app/";
-      const secretCode = url?.split("haewooso://params/?secret_code=")?.[1];
+      let secretCode;
+      if (url.includes("secret_code=")) {
+        secretCode = url?.split("secret_code=")?.[1];
+      }
 
       if (secretCode) {
         navigation.navigate("Tabs", {

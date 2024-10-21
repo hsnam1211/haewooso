@@ -34,6 +34,8 @@ import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
+import { toastConfig, ToastHandle } from "../src/util/toastMsg";
+import Toast from "react-native-toast-message";
 
 export const isEmptyDescription = (text) => {
   return !(!text || text.trim().length === 0);
@@ -84,7 +86,6 @@ function PushScreen({ route }: any) {
 
   const handlePress = async () => {
     // axios 호출
-    // TODO: 시크릿 코드 유무에 따라서 End Point 분기
     const endPoint = isEmptyDescription(secretCode)
       ? "/secret/v1/send"
       : "/push/v1/send";
@@ -96,17 +97,22 @@ function PushScreen({ route }: any) {
     };
 
     console.log(config);
-
+    setLoading(true);
     axios
       .post(`${HW_URL.APP_API}${endPoint}`, config)
       .then((response) => {
         // 성공적으로 요청을 처리한 경우
         console.log(`${HW_URL.APP_API}${endPoint}`);
-        console.log(response.data);
+
         setNumber((p) => p - 1);
-        if (response.data === 200) {
-        } else {
-        }
+
+        const toast =
+          response.data === 200
+            ? "성공적으로 보내졌어요."
+            : "보내지지 않았어요. 다시 보내보세요.";
+
+        ToastHandle(toast);
+
         navigation.goBack();
       })
       .catch((error) => {
@@ -323,6 +329,11 @@ function PushScreen({ route }: any) {
                       taptic();
                     }}
                     onPressOut={() => {
+                      if (secretCodeCheck && !isEmptyDescription(secretCode)) {
+                        ToastHandle("시크릿 코드를 입력해주세요.");
+                        return;
+                      }
+
                       taptic();
                       setModalVisible(true);
                     }}
@@ -344,6 +355,7 @@ function PushScreen({ route }: any) {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      {secretCodeCheck && <Toast config={toastConfig as any} />}
     </>
   );
 }
