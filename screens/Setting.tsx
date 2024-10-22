@@ -6,12 +6,14 @@ import { onPressMoveSystemSetting, requestUserPermission } from "../App";
 
 import ArrowClick from "../assets/arrowClick.png";
 import CheckBox from "@react-native-community/checkbox";
+import Clipboard from "@react-native-clipboard/clipboard";
 import CommonModal from "../src/components/CommonModal";
 import { HW_URL } from "../src/res/env";
 import InfoModal from "../src/components/InfoModal";
 import { Share } from "react-native";
 import { Storage } from "../src/util/storage";
 import SvgIcon from "../src/components/SvgIcon";
+import { ToastHandle } from "../src/util/toastMsg";
 import axios from "axios";
 import { getMessageState } from "../src/recoil/atoms";
 import { isEmptyDescription } from "./PushScreen";
@@ -32,6 +34,7 @@ function Setting({ route }) {
   const [mainCheck, setMainCheck] = useState(true);
   const [description, setDescription] = useState("");
   const { isPush, setIsPush, updatePushState } = usePush();
+  const [checkMail, setCheckMail] = useState<number>(0);
 
   const prevIsPushRef = useRef<any>();
 
@@ -70,19 +73,22 @@ function Setting({ route }) {
       .post(`${HW_URL.APP_API}${endPoint}`, {
         uuid: uuid,
       })
-      .then(async (response) => {
+      .then(async response => {
         // 성공적으로 요청을 처리한 경우
         console.log("getSecretCode", response.data);
         setSecretCode(response.data);
         await Storage.setItem("secretCode", response.data);
       })
-      .catch(async (error) => {
+      .catch(async error => {
         // 요청 처리 중에 오류가 발생한 경우
         console.error(error);
         console.error(endPoint);
       });
   };
-
+  const copyToClipboard = async (copiedText: string) => {
+    await Clipboard.setString(copiedText);
+    ToastHandle("복사 되었어요. 피드백 많이 주세요.");
+  };
   const CustomCheckBox = ({ checkState, setCheckState, callback }) => {
     return (
       <View>
@@ -102,7 +108,7 @@ function Setting({ route }) {
                 onPressMoveSystemSetting();
                 return;
               }
-              setCheckState((prev) => !prev);
+              setCheckState(prev => !prev);
               return;
             }
 
@@ -118,7 +124,7 @@ function Setting({ route }) {
   };
 
   const [codeViewWidth, setCodeViewWidth] = useState<number>(0);
-  const handleLayout = (event) => {
+  const handleLayout = event => {
     const { width } = event.nativeEvent.layout;
     console.log(width);
     setCodeViewWidth(width);
@@ -314,6 +320,77 @@ function Setting({ route }) {
               {!isEmptyDescription(secretCode)
                 ? "시크릿 코드 발급 받기"
                 : "시크릿 코드 재발급 받기"}
+            </Text>
+          </Pressable>
+        </View>
+        <View
+          style={{
+            marginTop: 30,
+            marginBottom: Platform.select({ ios: 10, android: 10 }),
+          }}
+        >
+          <Text style={{ fontWeight: "bold", fontSize: 13 }}>
+            유저의 목소리 (아래 메일로 피드백 많이 주세요.)
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "column",
+            // alignItems: "center",
+            marginLeft: Platform.select({ ios: 4, android: 0 }),
+          }}
+        >
+          <Pressable
+            onPress={async () => {
+              setCheckMail(1);
+              await copyToClipboard("rlaxodnr457@gmail.com");
+            }}
+          >
+            <Text
+              style={{
+                marginBottom: 10,
+                textAlignVertical: "center",
+                fontSize: Platform.select({ ios: 14, android: 13 }),
+                position: "relative",
+                top: Platform.select({ ios: 0, android: -2 }),
+              }}
+            >
+              rlaxodnr457@gmail.com {checkMail === 1 && "✓"}
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={async () => {
+              setCheckMail(2);
+              await copyToClipboard("gntmd1211@gmail.com");
+            }}
+          >
+            <Text
+              style={{
+                marginBottom: 10,
+                textAlignVertical: "center",
+                fontSize: Platform.select({ ios: 14, android: 13 }),
+                position: "relative",
+                top: Platform.select({ ios: 0, android: -2 }),
+              }}
+            >
+              gntmd1211@gmail.com {checkMail === 2 && "✓"}
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={async () => {
+              setCheckMail(3);
+              await copyToClipboard("q6723@naver.com");
+            }}
+          >
+            <Text
+              style={{
+                textAlignVertical: "center",
+                fontSize: Platform.select({ ios: 14, android: 13 }),
+                position: "relative",
+                top: Platform.select({ ios: 0, android: -2 }),
+              }}
+            >
+              q6723@naver.com {checkMail === 3 && "✓"}
             </Text>
           </Pressable>
         </View>

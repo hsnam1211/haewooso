@@ -19,6 +19,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ToastHandle, toastConfig } from "../src/util/toastMsg";
 import { height, width } from "../src/util/screenDimensions";
 
 import CheckBox from "@react-native-community/checkbox";
@@ -27,6 +28,7 @@ import { HW_URL } from "../src/res/env";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Storage } from "../src/util/storage";
 import SvgIcon from "../src/components/SvgIcon";
+import Toast from "react-native-toast-message";
 import axios from "axios";
 import { sendMessageCount } from "../src/recoil/atoms";
 import styled from "styled-components";
@@ -34,10 +36,8 @@ import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
-import { toastConfig, ToastHandle } from "../src/util/toastMsg";
-import Toast from "react-native-toast-message";
 
-export const isEmptyDescription = (text) => {
+export const isEmptyDescription = text => {
   return !(!text || text.trim().length === 0);
 };
 
@@ -58,7 +58,7 @@ function PushScreen({ route }: any) {
     }
   }, []);
 
-  const truncateDescription = (description) => {
+  const truncateDescription = description => {
     if (description.length > 15) {
       return description.slice(0, 15) + "...";
     } else {
@@ -66,7 +66,7 @@ function PushScreen({ route }: any) {
     }
   };
 
-  const handleTextChange = (inputText) => {
+  const handleTextChange = inputText => {
     if (
       getNumberOfLines(inputText) <= maxLines &&
       inputText.length <= maxLength
@@ -74,11 +74,11 @@ function PushScreen({ route }: any) {
       setDescription(inputText);
     }
   };
-  const handleSecretCodeChange = (inputText) => {
+  const handleSecretCodeChange = inputText => {
     setSecretCode(inputText);
   };
 
-  const getNumberOfLines = (text) => {
+  const getNumberOfLines = text => {
     return text.split("\n").length;
   };
 
@@ -100,11 +100,11 @@ function PushScreen({ route }: any) {
     setLoading(true);
     axios
       .post(`${HW_URL.APP_API}${endPoint}`, config)
-      .then((response) => {
+      .then(response => {
         // 성공적으로 요청을 처리한 경우
         console.log(`${HW_URL.APP_API}${endPoint}`);
 
-        setNumber((p) => p - 1);
+        setNumber(p => p - 1);
 
         const toast =
           response.data === 200
@@ -115,7 +115,7 @@ function PushScreen({ route }: any) {
 
         navigation.goBack();
       })
-      .catch((error) => {
+      .catch(error => {
         // 요청 처리 중에 오류가 발생한 경우
         console.log(`${error} ${endPoint}`);
       })
@@ -138,7 +138,7 @@ function PushScreen({ route }: any) {
         lineWidth={1}
         disabled={false}
         value={checkState}
-        onValueChange={(newValue) => setCheckState(newValue)}
+        onValueChange={newValue => setCheckState(newValue)}
         style={{ width: 14, height: 14, marginRight: 7 }}
       />
     ) : (
@@ -147,7 +147,7 @@ function PushScreen({ route }: any) {
         tintColors={{ true: "black", false: "black" }}
         disabled={false}
         value={checkState}
-        onValueChange={(newValue) => setCheckState(newValue)}
+        onValueChange={newValue => setCheckState(newValue)}
       />
     );
   };
@@ -217,7 +217,7 @@ function PushScreen({ route }: any) {
               onChangeText={handleTextChange}
               placeholder={
                 !isEmptyDescription(description)
-                  ? "근심을 털어놓아보세요. 익명의 누군가에게 전달되어요."
+                  ? "부적절하거나 불쾌감을 줄 수 있는 메시지를 전송할 경우 제재를 받을 수 있습니다."
                   : ""
               }
               multiline={true}

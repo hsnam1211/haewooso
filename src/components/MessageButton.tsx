@@ -1,9 +1,9 @@
-import { Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 
 import React from "react";
+import Toast from "react-native-toast-message";
 import { taptic } from "../util/taptic";
 import { useNavigation } from "@react-navigation/native";
-import Toast from "react-native-toast-message";
 
 export const MessageButton = () => {
   const navigation = useNavigation<any>();
@@ -46,8 +46,10 @@ export const MessageButton = () => {
               paddingRight: 15,
               paddingTop: 10,
               paddingBottom: 10,
-              fontSize: 14,
-              fontWeight: "600",
+              fontSize: Platform.select({ android: 12, ios: 14 }),
+              fontWeight: "500",
+              position: "relative",
+              top: Platform.select({ android: -2 }),
             }}
           >
             익명의 누군가에게 나의 근심 보내보기

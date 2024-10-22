@@ -8,5 +8,5 @@ const options = {
   ignoreAndroidSystemSettings: true,
 };
 export const taptic = () => {
-  trigger(Platform.OS === 'ios' ?"rigid": "keyboardTap", options);
+  trigger(Platform.OS === 'ios' ? "rigid" : "keyboardTap", options);
 } 

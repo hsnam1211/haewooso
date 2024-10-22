@@ -1,7 +1,8 @@
+import { Platform, Pressable, Text, View } from "react-native";
+import { height, width } from "../../src/util/screenDimensions";
+
 import React from "react";
-import { Text, View, Platform, Pressable } from "react-native";
 import Toast from "react-native-toast-message";
-import { width, height } from "../../src/util/screenDimensions";
 import { taptic } from "./taptic";
 
 export const toastConfig = {
@@ -49,12 +50,12 @@ export const toastConfig = {
   ),
 };
 
-export const ToastHandle = (text: any) => {
+export const ToastHandle = (text: any, time?: any) => {
   Toast.show({
     type: "tomatoToast",
     position: "bottom",
     bottomOffset: 100,
-    visibilityTime: 2000,
+    visibilityTime: time ? time : 2000,
     text1: text,
   });
 };

@@ -86,7 +86,7 @@ function Main() {
   };
 
   const getMessageHandle = async () => {
-    await Storage.getItem("message").then((msg) => {
+    await Storage.getItem("message").then(msg => {
       console.log("background에서 가져온 Message : ", msg);
       if (msg) {
         setMessage({
@@ -107,7 +107,7 @@ function Main() {
     pushOnOffCheck();
 
     Linking.getInitialURL() // 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음
-      .then(async (value) => {
+      .then(async value => {
         const url = value ? value : "https://haewooso.web.app/";
         const secretCode = url?.split("haewooso://params/?secret_code=")?.[1];
 
@@ -124,7 +124,7 @@ function Main() {
         }
       });
 
-    const urlListener = Linking.addEventListener("url", async (e) => {
+    const urlListener = Linking.addEventListener("url", async e => {
       // 앱이 실행되어있는 상태에서 요청이 왔을 때 처리하는 이벤트 등록
       const value = e.url;
 
@@ -154,7 +154,7 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    const subscribeToMessages = messaging().onMessage(async (remoteMessage) => {
+    const subscribeToMessages = messaging().onMessage(async remoteMessage => {
       console.log("Main subscribeToMessages", remoteMessage);
       setMessage({
         body: remoteMessage?.notification?.body,

@@ -187,6 +187,15 @@ export default function App() {
   const queryClient = new QueryClient();
 
   useEffect(() => {
+    // 백그라운드 및 종료 상태에서 클릭 시 처리
+    // messaging().getInitialNotification().then(remoteMessage => {
+    //   alert(`asdasdasd: ${JSON.stringify(remoteMessage)}`)
+    //   if (remoteMessage) {
+    //     console.log('앱이 종료된 상태에서 알림 클릭:', remoteMessage);
+    //     // 여기서 데이터를 가져오는 로직을 추가
+    //   }
+    // }); 
+
     const initialize = async () => {
       await Storage.setItem("setting", false);
       await getUUID();
@@ -195,7 +204,8 @@ export default function App() {
       await requestUserPermission();
     };
 
-    initialize();
+    initialize();    
+  
   }, []);
 
   if (Platform.OS === "ios") StatusBar.setBarStyle("dark-content", true);

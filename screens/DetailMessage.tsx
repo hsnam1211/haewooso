@@ -4,6 +4,7 @@ import { height, width } from "../src/util/screenDimensions";
 
 import CommonModal from "../src/components/CommonModal";
 import SvgIcon from "../src/components/SvgIcon";
+import { ToastHandle } from "../src/util/toastMsg";
 import { sendMessageCount } from "../src/recoil/atoms";
 import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
@@ -21,43 +22,39 @@ function DetailMessage({ route }) {
   const adAlert = () => {
     setModalVisible(true);
   };
+  const isSecret = () => {
+    return data?.secretAt === "S" && data?.secretCode;
+  };
 
   // 횟수 0일 때 광고 호출
-  const adHandlePress = async () => {
-    // axios 호출
-    setNumber(5);
+  const handlePress = () => {
     setModalVisible(false);
-    //   axios.post('http://15.165.155.62:8080/v1/push', {
-    //     title: truncateDescription(description),
-    //     description: description,
-    //     sender_uuid: await Storage.getItem('uuid'),
-    //     main_view_yn: mainCheck ? 'Y' : 'N',
-    //     reply_yn: receiveCheck ? 'Y' : 'N'
-    //   })
-    //     .then(response => {
-    //       // 성공적으로 요청을 처리한 경우
-    //       console.log(response.data);
-    //     })
-    //     .catch(error => {
-    //       // 요청 처리 중에 오류가 발생한 경우
-    //       console.error(error);
-    //     });
+
+    ToastHandle("신고가 접수되었습니다.", 3000);
+    navigation.goBack();
   };
   return (
     <>
       <CommonModal
-        title="새로 날아온 근심"
-        description="더이상 메시지를 보낼 수 없어요. 광고보고 횟수를 채워보세요."
+        title=""
+        description=""
         type="alert"
-        confirmText="네, 광고보고 올래요"
-        closeText=""
+        confirmText="신고하기"
+        closeText="취소"
         visible={modalVisible}
-        onConfirm={adHandlePress}
+        onConfirm={handlePress}
         onClose={() => {
           console.log("팝업을 닫았습니다.");
           setModalVisible(false);
         }}
-      />
+      >
+        <View>
+          <Text style={{ marginBottom: -10 }}>
+            신고 후 24시간 이내에 해우소 운영진이 검토하여 {"\n"}
+          </Text>
+          <Text>메시지와 발신인에 대한 조치를 취합니다.</Text>
+        </View>
+      </CommonModal>
       <View style={{ flex: 1 }}>
         <View
           style={{
@@ -77,24 +74,32 @@ function DetailMessage({ route }) {
               marginBottom: 10,
             }}
           >
-            <View style={{ flexDirection: "row" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
               <View
                 style={{
-                  backgroundColor:
-                    data?.secretAt === "S" ? "#2A2322" : "#a83f39",
+                  backgroundColor: isSecret() ? "#2A2322" : "#a83f39",
                   marginHorizontal: 2,
                   paddingLeft: 8,
                   paddingRight: 8,
                   paddingTop: 3,
                   paddingBottom: 3,
                   borderRadius: 4,
+                  marginTop: 20,
                 }}
               >
-                {data?.secretAt === "S" ? (
+                {isSecret() ? (
                   <Text
                     style={{
                       fontSize: Platform.select({ ios: 12, android: 11 }),
                       color: "#ffffff",
+                      position: "relative",
+                      top: Platform.select({ android: -1.2 }),
                     }}
                   >
                     메시지 전송 가능
@@ -104,57 +109,44 @@ function DetailMessage({ route }) {
                     style={{
                       fontSize: Platform.select({ ios: 12, android: 11 }),
                       color: "#ffffff",
+                      position: "relative",
+                      top: Platform.select({ android: -1.2 }),
                     }}
                   >
                     메시지 전송 불가
                   </Text>
                 )}
               </View>
-              {data.reply_yn === "N" && (
-                <View
-                  style={{
-                    backgroundColor: "lightgray",
-                    marginHorizontal: 2,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 3,
-                    paddingBottom: 3,
-                    borderRadius: 4,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: Platform.select({ ios: 12, android: 11 }),
-                      color: "#000000",
-                    }}
-                  >
-                    답변 완료
-                  </Text>
-                </View>
-              )}
-            </View>
-            {data.reply_yn === "Y" && (
-              <View
+              <Pressable
+                onPress={() => {
+                  setModalVisible(true);
+                }}
                 style={{
-                  backgroundColor: "#575241",
+                  backgroundColor: "transparent",
                   marginHorizontal: 2,
                   paddingLeft: 8,
                   paddingRight: 8,
                   paddingTop: 3,
                   paddingBottom: 3,
-                  borderRadius: 50,
+                  borderRadius: 4,
+                  marginTop: 20,
+                  borderStyle: "solid",
+                  borderColor: "red",
+                  borderWidth: 1,
                 }}
               >
                 <Text
                   style={{
                     fontSize: Platform.select({ ios: 12, android: 11 }),
-                    color: "#ffffff",
+                    color: "red",
+                    position: "relative",
+                    top: Platform.select({ android: -1.2, ios: 0 }),
                   }}
                 >
-                  남은 답변 횟수 : 1/3
+                  신고하기
                 </Text>
-              </View>
-            )}
+              </Pressable>
+            </View>
           </View>
           <View style={{ alignItems: "center" }}>
             <View
@@ -174,7 +166,7 @@ function DetailMessage({ route }) {
                   width: width - 40,
                   fontSize: Platform.select({ ios: 14, android: 13 }),
                   marginTop: 7,
-                  marginBottom: Platform.select({ ios: 7, android: 13 }),
+                  marginBottom: Platform.select({ ios: 7, android: 7 }),
                   paddingTop: 24,
                   textAlignVertical: "center",
                   lineHeight: 25,
@@ -185,9 +177,32 @@ function DetailMessage({ route }) {
               </Text>
             </View>
           </View>
+          <View
+            style={{
+              marginTop: Platform.select({ ios: 0, android: 0 }),
+            }}
+          >
+            <Text
+              style={{
+                paddingLeft: 5,
+                paddingRight: 5,
+                paddingBottom: 14,
+                width: width - 40,
+                fontSize: Platform.select({ ios: 14, android: 13 }),
+                marginTop: 7,
+                marginBottom: Platform.select({ ios: 7, android: 13 }),
+                paddingTop: 24,
+                textAlignVertical: "center",
+                lineHeight: 25,
+                color: "gray",
+              }}
+            >
+              * 부적절하거나 불쾌감을 줄 수 있는 메시지를 받으셨다면 신고하기를
+              눌러주세요. 신고 내용은 24시간 이내 조치됩니다.
+            </Text>
+          </View>
         </View>
-
-        {data?.secretAt === "S" && (
+        {isSecret() && (
           <Pressable
             onPressIn={() => {
               taptic();
@@ -199,15 +214,6 @@ function DetailMessage({ route }) {
                 params: { secretCode: data?.secretCode },
                 animation: "fade",
               });
-              // if (number >= 1) {
-              //   navigation.navigate("StackModal", {
-              //     screen: "PushScreen",
-              //     animation: "fade",
-              //   });
-              //   setNumber(p => p - 1);
-              // } else {
-              //   adAlert();
-              // }
             }}
             style={{
               justifyContent: "center",
