@@ -25,16 +25,13 @@ import { height, width } from "../src/util/screenDimensions";
 import CheckBox from "@react-native-community/checkbox";
 import CommonModal from "../src/components/CommonModal";
 import { HW_URL } from "../src/res/env";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Storage } from "../src/util/storage";
 import SvgIcon from "../src/components/SvgIcon";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import { sendMessageCount } from "../src/recoil/atoms";
-import styled from "styled-components";
 import { taptic } from "../src/util/taptic";
 import { useNavigation } from "@react-navigation/native";
-import { useQueryClient } from "react-query";
 import { useRecoilState } from "recoil";
 
 export const isEmptyDescription = text => {

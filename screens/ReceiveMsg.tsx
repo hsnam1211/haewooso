@@ -14,10 +14,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { height, width } from "../src/util/screenDimensions";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 
-import ArrowClick from "../assets/arrowClick.png";
 import DeviceInfo from "react-native-device-info";
 import { HW_URL } from "../src/res/env";
-import Transparent from "../assets/transparent.png";
 import axios from "axios";
 import styled from "styled-components";
 import { taptic } from "../src/util/taptic";
@@ -30,7 +28,7 @@ const Container = styled(View)`
 
 function ReceiveMsg({ route }) {
   const { title, uuid } = route.params; // params에서 title과 message 추출
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const [params, setParams] = useState<any>({
     page: 0,

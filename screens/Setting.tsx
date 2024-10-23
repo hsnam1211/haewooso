@@ -5,7 +5,6 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { onPressMoveSystemSetting, requestUserPermission } from "../App";
 
 import ArrowClick from "../assets/arrowClick.png";
-import CheckBox from "@react-native-community/checkbox";
 import Clipboard from "@react-native-clipboard/clipboard";
 import CommonModal from "../src/components/CommonModal";
 import { HW_URL } from "../src/res/env";
